@@ -16,11 +16,11 @@ void getRd(Tokenizer *tokenizer, uint16_t *value){
   Token *token;
   char *operands;
 
-  token = getToken(tokenizer);
+  token = getToken(tokenizer);    //get the first token from tokenizer
   if(token->type != TOKEN_IDENTIFIER_TYPE){
     throwException(ERR_EXPECTING_IDENTIFIER, token, "The element is not identifier");
   }
-  operands = token->str;
-  //freeToken(token);
+  operands = ((IdentifierToken *)token->str);
+
   printf("Testing : %s",operands);
 }
