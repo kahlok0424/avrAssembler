@@ -27,15 +27,14 @@ void getRd(Tokenizer *tokenizer, uint16_t *value){
   if(*(operands) != 'R' && *(operands) != 'r' ){
     throwException(ERR_INVALID_IDENTIFIER, token, "Expect R/r but the identifier is %s" , operands);
   }else{
-    ++operands;
-    /*if(!(isdigit(operands+1))){
+    if(!(isdigit(operands[1]))){
       throwException(ERR_INVALID_IDENTIFIER, token, "Expect integer but the identifier is %s" , operands);
-    }else{*/
-    v1 = atoi(operands);
-    if(v1>32 || v1 < 0){
-      throwException(ERR_BEYOND_LIMIT, token, "%s beyond the limit of 0 < d < 31" ,token->str );
-    }else
-    *value = v1;
+    }else{
+      operands++;
+      v1 = atoi(operands);
+      if(v1>32 || v1 < 0){
+        throwException(ERR_BEYOND_LIMIT, token, "%s beyond the limit of 0 < d < 31" ,token->str );
+      }else { *value = v1; }
   }
-  //}
+  }
 }
