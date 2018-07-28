@@ -21,6 +21,9 @@ void getRd(Tokenizer *tokenizer, uint16_t *value){
     throwException(ERR_EXPECTING_IDENTIFIER, token, "The element is not identifier");
   }
   operands = ((IdentifierToken *)token->str);
+  if(*(operands) != 'R' && *(operands) != 'r' ){
+    throwException(ERR_INVALID_IDENTIFIER, token, "Expect R/r but the identifier is %s" , operands);
+  }
 
   printf("Testing : %s",operands);
 }

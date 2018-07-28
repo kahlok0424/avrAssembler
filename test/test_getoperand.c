@@ -11,6 +11,8 @@ void tearDown(void)
 {
 }
 
+CEXCEPTION_T ex;
+
 void test_getRd_given_r12_expect_extract_correctly(void)
 {
   uint16_t values[1];
@@ -35,11 +37,16 @@ void test_getRd_given_z15_expect_exception_incorrect_operand(void)
 {
   char *operands = "z45";
   uint16_t values[1];
+
+  Try {
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
 
   getRd(tokenizer, values);
-  TEST_ASSERT_EQUAL(12,values[0]);
+  //TEST_ASSERT_EQUAL(12,values[0]);
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
 }
 
 void test_getRd_given_r45_expect_exception_beyond_limit(void)
