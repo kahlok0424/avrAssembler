@@ -18,9 +18,12 @@ void test_getRd_given_r12_expect_extract_correctly(void)
   uint16_t values[1];
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer("r12");
-
+  Try {
   getRd(tokenizer, values);
   TEST_ASSERT_EQUAL(12,values[0]);
+  }Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+  }
 }
 
 void test_getRd_given_R7_expect_extract_correctly(void)
@@ -29,13 +32,17 @@ void test_getRd_given_R7_expect_extract_correctly(void)
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer("R7");
 
+  Try {
   getRd(tokenizer, values);
   TEST_ASSERT_EQUAL(7,values[0]);
+  }Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+  }
 }
 
 void test_getRd_given_z15_expect_exception_incorrect_operand(void)
 {
-  char *operands = "z45";
+  char *operands = "z15";
   uint16_t values[1];
 
   Try {
@@ -43,7 +50,7 @@ void test_getRd_given_z15_expect_exception_incorrect_operand(void)
   tokenizer = createTokenizer(operands);
 
   getRd(tokenizer, values);
-  //TEST_ASSERT_EQUAL(12,values[0]);
+  TEST_FAIL_MESSAGE("Expected ERR_INVALID_IDENTIFIER exception to be thrown, but none received.");
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
   }
@@ -53,9 +60,31 @@ void test_getRd_given_r45_expect_exception_beyond_limit(void)
 {
   char *operands = "r45";
   uint16_t values[1];
+
+  Try {
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
 
   getRd(tokenizer, values);
-  TEST_ASSERT_EQUAL(12,values[0]);
+  TEST_FAIL_MESSAGE("Expected ERR_BEYOND_LIMIT exception to be thrown, but none received.");
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getRd_given_r_negative_one_expect_exception_beyond_limit(void)
+{
+  char *operands = "rbb1";
+  uint16_t values[1];
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+
+  getRd(tokenizer, values);
+  //TEST_ASSERT_EQUAL(7,values[0]);
+  TEST_FAIL_MESSAGE("Expected ERR_INVALID_IDENTIFIER exception to be thrown, but none received.");
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
 }

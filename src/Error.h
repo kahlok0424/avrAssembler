@@ -12,5 +12,6 @@
 #define ERR_EXPECTING_INTEGER     51
 #define ERR_EXPECTING_OPERATOR    52
 #define ERR_EXPECTING_IDENTIFIER  60
+#define ERR_BEYOND_LIMIT          88
 
 #endif // Error_H
