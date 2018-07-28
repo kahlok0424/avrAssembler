@@ -103,3 +103,19 @@ void test_getRd_given_rbbb2_expect_exception_incorrect_identifier(void)
   dumpTokenErrorMessage(ex, 1);
   }
 }
+
+void test_getRd_given_2r_expect_exception_incorrect_integer(void)
+{
+  char *operands = "2r";
+  uint16_t values[1];
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+
+  getRd(tokenizer, values);
+  TEST_FAIL_MESSAGE("Expected ERR_INVALID_IDENTIFIER exception to be thrown, but none received.");
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
