@@ -38,3 +38,14 @@ void getRd(Tokenizer *tokenizer, uint16_t *value){
   }
   }
 }
+
+/**
+ * @param tokenizer [tokenizered operands]
+ * @param value     [to store the value behind r/R]
+ * Verify the validity of Rd and Rr
+ * If correct ,extract the value of Rd and Rd
+ * else throw an test_getRd_given_r12_expect_extract_correctly
+ */
+void getRdRr(Tokenizer *tokenizer , uint16_t *value){
+
+}
