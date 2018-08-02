@@ -100,5 +100,4 @@ void getRdRr(Tokenizer *tokenizer , uint16_t *value){
   }
   }
   freeToken(token);
-
 }
