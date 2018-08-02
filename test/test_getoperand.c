@@ -13,13 +13,163 @@ void tearDown(void)
 
 CEXCEPTION_T ex;
 
+void test_getRegister_given_r12_expect_extract_correctly(void)
+{
+  uint16_t values[1];
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer("r12");
+  Try {
+  values[0] = getRegister(tokenizer, R0,R31);
+  TEST_ASSERT_EQUAL(12,values[0]);
+  }Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getRegister_given_R7_expect_extract_correctly(void)
+{
+  uint16_t values[1];
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer("R7");
+
+  Try {
+  values[0] = getRegister(tokenizer, R0,R31);
+  TEST_ASSERT_EQUAL(7,values[0]);
+  }Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getRegister_given_r18_limit_16_to31_expect_extract_correctly(void)
+{
+  uint16_t values[1];
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer("r18");
+
+  Try {
+  values[0] = getRegister(tokenizer, R16,R31);
+  TEST_ASSERT_EQUAL(18,values[0]);
+  }Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getRegister_given_R7_limit_16_to_31_expect_extract_beyond_limit(void)
+{
+  uint16_t values[1];
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer("R7");
+
+  Try {
+  values[0] = getRegister(tokenizer, R16,R31);
+  //TEST_ASSERT_EQUAL(18,values[0]);
+  }Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getRegister_given_r45_expect_exception_beyond_limit(void)
+{
+  char *operands = "r45";
+  uint16_t values[1];
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+
+  values[0] = getRegister(tokenizer, R0,R31);
+  TEST_FAIL_MESSAGE("Expected ERR_BEYOND_LIMIT exception to be thrown, but none received.");
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getRegister_given_R30_limit_0_to_16_expect_extract_beyond_limit(void)
+{
+  uint16_t values[1];
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer("R30");
+
+  Try {
+  values[0] = getRegister(tokenizer, R0,R16);
+  TEST_FAIL_MESSAGE("Expected ERR_BEYOND_LIMIT exception to be thrown, but none received.");
+  }Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getRegister_given_k15_expect_exception_incorrect_identifier(void)
+{
+  char *operands = "k15";
+  uint16_t values[1];
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+
+  values[0] = getRegister(tokenizer, R0,R31);
+  TEST_FAIL_MESSAGE("Expected ERR_INVALID_IDENTIFIER exception to be thrown, but none received.");
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getRegister_given_r_negative_one_expect_exception_incorrect_identifier(void)
+{
+  char *operands = "r-1";
+  uint16_t values[1];
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+
+  values[0] = getRegister(tokenizer, R0,R31);
+  TEST_FAIL_MESSAGE("Expected ERR_INVALID_IDENTIFIER exception to be thrown, but none received.");
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getRegister_given_rbb9_expect_exception_incorrect_identifier(void)
+{
+  char *operands = "rbb9";
+  uint16_t values[1];
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+
+  values[0] = getRegister(tokenizer, R0,R31);
+  TEST_FAIL_MESSAGE("Expected ERR_INVALID_IDENTIFIER exception to be thrown, but none received.");
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getRegister_given_7r_expect_exception_incorrect_integer(void)
+{
+  char *operands = "7r";
+  uint16_t values[1];
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+
+  values[0] = getRegister(tokenizer, R0,R31);
+  TEST_FAIL_MESSAGE("Expected ERR_INVALID_IDENTIFIER exception to be thrown, but none received.");
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+//old test for old functions
 void test_getRd_given_r12_expect_extract_correctly(void)
 {
   uint16_t values[1];
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer("r12");
   Try {
-  getRd(tokenizer, values);
+  getRd(tokenizer, values , R0,R31);
   TEST_ASSERT_EQUAL(12,values[0]);
   }Catch(ex){
   dumpTokenErrorMessage(ex, 1);
@@ -33,9 +183,25 @@ void test_getRd_given_R7_expect_extract_correctly(void)
   tokenizer = createTokenizer("R7");
 
   Try {
-  getRd(tokenizer, values);
+  getRd(tokenizer, values, R0,R31);
   TEST_ASSERT_EQUAL(7,values[0]);
   }Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getRd_given_r1_limit_R16_to_R31_expect_exception_beyond_limit(void)
+{
+  char *operands = "r1";
+  uint16_t values[1];
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+
+  getRd(tokenizer, values, R16,R31);
+  TEST_FAIL_MESSAGE("Expected ERR_BEYOND_LIMIT exception to be thrown, but none received.");
+  }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
   }
 }
@@ -49,7 +215,7 @@ void test_getRd_given_z15_expect_exception_incorrect_identifier(void)
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
 
-  getRd(tokenizer, values);
+  getRd(tokenizer, values, R0,R31);
   TEST_FAIL_MESSAGE("Expected ERR_INVALID_IDENTIFIER exception to be thrown, but none received.");
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
@@ -65,7 +231,7 @@ void test_getRd_given_r45_expect_exception_beyond_limit(void)
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
 
-  getRd(tokenizer, values);
+  getRd(tokenizer, values, R0,R31);
   TEST_FAIL_MESSAGE("Expected ERR_BEYOND_LIMIT exception to be thrown, but none received.");
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
@@ -81,7 +247,7 @@ void test_getRd_given_r_negative_one_expect_exception_incorrect_identifier(void)
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
 
-  getRd(tokenizer, values);
+  getRd(tokenizer, values, R0,R31);
   TEST_FAIL_MESSAGE("Expected ERR_INVALID_IDENTIFIER exception to be thrown, but none received.");
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
@@ -97,7 +263,7 @@ void test_getRd_given_rbbb2_expect_exception_incorrect_identifier(void)
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
 
-  getRd(tokenizer, values);
+  getRd(tokenizer, values, R0,R31);
   TEST_FAIL_MESSAGE("Expected ERR_INVALID_IDENTIFIER exception to be thrown, but none received.");
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
@@ -113,7 +279,7 @@ void test_getRd_given_2r_expect_exception_incorrect_integer(void)
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
 
-  getRd(tokenizer, values);
+  getRd(tokenizer, values, R0,R31);
   TEST_FAIL_MESSAGE("Expected ERR_INVALID_IDENTIFIER exception to be thrown, but none received.");
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
@@ -256,6 +422,38 @@ void test_getRdRr_given_2r_r6_expect_exception_incorrect_integer(void)
 
   getRdRr(tokenizer, values);
   TEST_FAIL_MESSAGE("Expected ERR_INVALID_IDENTIFIER exception to be thrown, but none received.");
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getRdRr_given_r4_equal_r5_expect_exception_invalid_operator(void)
+{
+  char *operands = "r4 = r5";
+  uint16_t values[2];
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+
+  getRdRr(tokenizer, values);
+  TEST_FAIL_MESSAGE("Expected ERR_INVALID_OPERATOR exception to be thrown, but none received.");
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getRdRr_given_r1_A_r2_expect_exception_expecting_operator(void)
+{
+  char *operands = "r1 A r2";
+  uint16_t values[2];
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+
+  getRdRr(tokenizer, values);
+  TEST_FAIL_MESSAGE("Expected ERR_EXPECTING_OPERATOR exception to be thrown, but none received.");
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
   }
