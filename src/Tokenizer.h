@@ -21,8 +21,9 @@ void reinitTokenizer(Tokenizer *tokenizer, char *str);
 Tokenizer *createTokenizer(char *stringToTokenize);
 void freeTokenizer(Tokenizer *tokenizer);
 void configureTokenizer(Tokenizer *tokenizer, uint32_t configuration);
-Token *advanceToken(Tokenizer *tokenizer);
+//Token *advanceToken(Tokenizer *tokenizer);   // not implemented
 Token *getToken(Tokenizer *tokenizer);
-Token *peepToken(Tokenizer *tokenizer);
+//Token *peepToken(Tokenizer *tokenizer);
+void pushBackToken(Tokenizer *tokenizer , Token *token);
 
 #endif // Tokenizer_H
