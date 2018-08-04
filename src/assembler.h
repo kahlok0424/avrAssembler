@@ -18,8 +18,6 @@ static const instruc instrucs[] = {
 };
 
 char *convertToLowerCase(char *str);
-void  getTokenAndVerify(Tokenizer *tokenizer , char *str);
-int inc(char *line);
-void test_binary(void);
+void inc(Tokenizer *tokenizer, uint8_t **codeMemoryPtr);
 
 #endif // _ASSEMBLER_H

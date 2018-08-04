@@ -162,6 +162,64 @@ void test_getRegister_given_7r_expect_exception_incorrect_integer(void)
   }
 }
 
+void test_getTokenAndVerify_given_comma_expect_correct(void){
+  char *line = ",";
+  Tokenizer *tokenizer;
+  Token *token;
+
+  Try{
+  tokenizer = createTokenizer(line);
+  getNextTokenAndVerify(tokenizer,",");
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_getTokenAndVerify_given_semicolum_expect_correct(void){
+  char *line = ";";
+  Tokenizer *tokenizer;
+  Token *token;
+
+  Try{
+  tokenizer = createTokenizer(line);
+  getNextTokenAndVerify(tokenizer,";");
+  token = getToken(tokenizer);
+  TEST_ASSERT_EQUAL(TOKEN_NULL_TYPE,token->type);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_getTokenAndVerify_given_plus_expect_wrong_operator(void){
+  char *line = "+";
+  Tokenizer *tokenizer;
+  Token *token;
+
+  Try{
+  tokenizer = createTokenizer(line);
+  getNextTokenAndVerify(tokenizer,";");
+  token = getToken(tokenizer);
+  TEST_ASSERT_EQUAL(TOKEN_NULL_TYPE,token->type);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_getTokenAndVerify_given_3_plus_expect_wrong_operator(void){
+  char *line = "++";
+  Tokenizer *tokenizer;
+  Token *token;
+
+  Try{
+  tokenizer = createTokenizer(line);
+  getNextTokenAndVerify(tokenizer,"+");
+  token = getToken(tokenizer);
+  TEST_ASSERT_EQUAL(TOKEN_NULL_TYPE,token->type);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
 //old test for old functions
 void test_getRd_given_r12_expect_extract_correctly(void)
 {
@@ -292,7 +350,7 @@ void test_getRdRr_given_r2_r4_expect_extract_correctly(void)
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer("r2 , r4");
   Try {
-  getRdRr(tokenizer, values);
+  getRdRr(tokenizer, values , R0 ,R31);
   TEST_ASSERT_EQUAL(2,values[0]);
   TEST_ASSERT_EQUAL(4,values[1]);
   }Catch(ex){
@@ -307,7 +365,7 @@ void test_getRdRr_given_R7_R8_expect_extract_correctly(void)
   tokenizer = createTokenizer("R7, R8");
 
   Try {
-  getRdRr(tokenizer, values);
+  getRdRr(tokenizer, values ,R0 , R31);
   TEST_ASSERT_EQUAL(7,values[0]);
   TEST_ASSERT_EQUAL(8,values[1]);
   }Catch(ex){
@@ -324,7 +382,7 @@ void test_getRdRr_given_z15_r17_expect_exception_incorrect_identifier(void)
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
 
-  getRdRr(tokenizer, values);
+  getRdRr(tokenizer, values , R0 ,R31);
   TEST_FAIL_MESSAGE("Expected ERR_INVALID_IDENTIFIER exception to be thrown, but none received.");
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
@@ -340,7 +398,7 @@ void test_getRdRr_given_r5_x1_expect_exception_incorrect_identifier(void)
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
 
-  getRdRr(tokenizer, values);
+  getRdRr(tokenizer, values , R0 ,R31);
   TEST_FAIL_MESSAGE("Expected ERR_INVALID_IDENTIFIER exception to be thrown, but none received.");
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
@@ -356,7 +414,7 @@ void test_getRdRr_given_r45_r10_expect_exception_beyond_limit(void)
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
 
-  getRdRr(tokenizer, values);
+  getRdRr(tokenizer, values , R0 ,R31);
   TEST_FAIL_MESSAGE("Expected ERR_BEYOND_LIMIT exception to be thrown, but none received.");
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
@@ -372,7 +430,7 @@ void test_getRdRr_given_r10_r45_expect_exception_beyond_limit(void)
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
 
-  getRdRr(tokenizer, values);
+  getRdRr(tokenizer, values , R0 ,R31);
   TEST_FAIL_MESSAGE("Expected ERR_BEYOND_LIMIT exception to be thrown, but none received.");
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
@@ -388,7 +446,7 @@ void test_getRdRr_given_r_negative_one_r2_expect_exception_incorrect_identifier(
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
 
-  getRdRr(tokenizer, values);
+  getRdRr(tokenizer, values , R0, R31);
   TEST_FAIL_MESSAGE("Expected ERR_INVALID_IDENTIFIER exception to be thrown, but none received.");
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
@@ -404,7 +462,7 @@ void test_getRdRr_given_rbbb2_r4_expect_exception_incorrect_identifier(void)
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
 
-  getRdRr(tokenizer, values);
+  getRdRr(tokenizer, values , R0 ,R31);
   TEST_FAIL_MESSAGE("Expected ERR_INVALID_IDENTIFIER exception to be thrown, but none received.");
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
@@ -420,7 +478,7 @@ void test_getRdRr_given_2r_r6_expect_exception_incorrect_integer(void)
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
 
-  getRdRr(tokenizer, values);
+  getRdRr(tokenizer, values , R0 ,R31);
   TEST_FAIL_MESSAGE("Expected ERR_INVALID_IDENTIFIER exception to be thrown, but none received.");
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
@@ -436,7 +494,7 @@ void test_getRdRr_given_r4_equal_r5_expect_exception_invalid_operator(void)
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
 
-  getRdRr(tokenizer, values);
+  getRdRr(tokenizer, values , R0 ,R31);
   TEST_FAIL_MESSAGE("Expected ERR_INVALID_OPERATOR exception to be thrown, but none received.");
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
@@ -452,7 +510,7 @@ void test_getRdRr_given_r1_A_r2_expect_exception_expecting_operator(void)
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
 
-  getRdRr(tokenizer, values);
+  getRdRr(tokenizer, values , R0 ,R31);
   TEST_FAIL_MESSAGE("Expected ERR_EXPECTING_OPERATOR exception to be thrown, but none received.");
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);

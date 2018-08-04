@@ -42,6 +42,26 @@ int getRegister(Tokenizer *tokenizer, int minReg , int maxReg){
   return regValue;
 }
 
+void getNextTokenAndVerify(Tokenizer *tokenizer , char *str){
+  Token *token;
+  token = getToken(tokenizer);
+  if(token->type == TOKEN_OPERATOR_TYPE){
+    if(*(token->str) == (*str) ){
+     freeToken(token);   //free the token when finish used
+     token = getToken(tokenizer);
+     if(token->type == TOKEN_OPERATOR_TYPE){
+       //token = getToken(tokenizer);
+       //printf("token str = %s" , token->str);
+       throwException(ERR_INVALID_OPERATOR, token, "Expected to be not operator , but is %s  " ,token->str );
+     }else { pushBackToken(tokenizer ,token); }
+    }
+     else{
+       throwException(ERR_INVALID_OPERATOR, token, "Expected to be %s , but is %s  " ,str,token->str );
+    }
+  }else {
+    throwException(ERR_EXPECTING_OPERATOR, token, "Expected to be an operator, but is %s " ,token->str );
+  }
+}
 
 /**
  * @param tokenizer [tokenizered operands]
@@ -88,7 +108,14 @@ int getRegister(Tokenizer *tokenizer, int minReg , int maxReg){
  * If correct ,extract the value of Rd and Rd
  * else throw an test_getRd_given_r12_expect_extract_correctly
  */
-void getRdRr(Tokenizer *tokenizer , uint16_t *value){
+void getRdRr(Tokenizer *tokenizer , uint16_t *value , int minReg , int maxReg){
+  Token *token;
+  *value = getRegister(tokenizer, minReg, maxReg);
+  getNextTokenAndVerify(tokenizer , ",");
+  *(value+1) =getRegister(tokenizer ,minReg,maxReg);
+}
+
+/*void getRdRr(Tokenizer *tokenizer , uint16_t *value){
 
   Token *token;
   char *operands;
@@ -145,4 +172,4 @@ void getRdRr(Tokenizer *tokenizer , uint16_t *value){
   }
   freeToken(token);   //free the token when finish used
 
-}
+}*/

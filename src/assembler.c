@@ -33,39 +33,22 @@ char *convertToLowerCase(char *str)
     return buffer;
 }
 
-void getNextTokenAndVerify(Tokenizer *tokenizer , char *str){
-  Token *token;
-  token = getToken(tokenizer);
-  if(token->type != TOKEN_OPERATOR_TYPE){
-    throwException(ERR_EXPECTING_OPERATOR, token, "Expected to be an operator, but is %s " ,token->str );
-  }else {
-        if(*(token->str) != (*str) ){
-          throwException(ERR_INVALID_OPERATOR, token, "Expected to be %s , but is %s  " ,str,token->str );
-        }
-        else{
-           freeToken(token); }  //free the token when finish used
-  }
+char *encodingRd(int Rd){
+
 }
 
-int inc(char *line){
-  Tokenizer *tokenizer;
-  tokenizer = createTokenizer(line);
+void inc(Tokenizer *tokenizer , uint8_t **codeMemoryPtr){
+
   uint16_t values[1];    // values to store extraced value of Rd
   Token *token;
+  uint8_t ptr[4] ;
+  //ptr[] = *codeMemoryPtr;
 
-  token = getToken(tokenizer);
-  if(token->type == TOKEN_IDENTIFIER_TYPE){
-    if(TokenMatches(token->str,"inc")){
-      freeToken(token);
-      getRd(tokenizer ,values, R0,R31);          //last modified : trying to make sure correct values get returned
-    }
-  }else{
-  }
-  //getRd(tokenizer ,values, R0,R31);
-  //printf("test : %d" , values[0]);
+  getRd(tokenizer, values ,R0,R31);
+
   int result = 0;
   result = values[0];
-  return result;
+  //return result;
 }
 
 void test_binary(void){
