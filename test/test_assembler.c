@@ -19,16 +19,17 @@ void test_convertToLowerCase_given_ABC_epxect_abc(void){
 
 void test_assembler_INC_given_R16_expect_opcode(void)
 {
-  char *line = "R16";
+  char *line = "R17";
   Token *token;
   Tokenizer *tokenizer;
-  char *codeMemoryPtr;
+  uint8_t codeMemoryPtr[1];
 
   tokenizer = createTokenizer(line);
-  inc(tokenizer , &codeMemoryPtr);
-  printf("code : %x" , *codeMemoryPtr);
+  inc(tokenizer , codeMemoryPtr);
+  printf("code : %x \n" , codeMemoryPtr[0]);
+  printf("code 1: %x \n" , codeMemoryPtr[1]);
   Try{
-  //TEST_ASSERT_EQUAL(16,inc(line));
+  TEST_ASSERT_EQUAL(0x9f13,codeMemoryPtr[0]);
 }Catch(ex){
   dumpTokenErrorMessage(ex, 1);
 }

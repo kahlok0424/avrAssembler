@@ -18,6 +18,6 @@ static const instruc instrucs[] = {
 };
 
 char *convertToLowerCase(char *str);
-void inc(Tokenizer *tokenizer, uint8_t **codeMemoryPtr);
+void inc(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
 
 #endif // _ASSEMBLER_H

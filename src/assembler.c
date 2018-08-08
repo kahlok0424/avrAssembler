@@ -37,19 +37,23 @@ char *encodingRd(int Rd){
 
 }
 
-void inc(Tokenizer *tokenizer , uint8_t **codeMemoryPtr){
+void inc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){
 
   uint16_t values[1];    // values to store extraced value of Rd
   Token *token;
   uint8_t ptr[1] ;
-  //ptr = codeMemoryPtr;
 
   getRd(tokenizer, values ,R0,R31);
+  if( (*values) >= 16 ){
+    codeMemoryPtr[0]= 0x95;
+    codeMemoryPtr[1]= (values[0]<<4) + 0x03;
+  }else{
+    codeMemoryPtr[0]= 0x94;
+    codeMemoryPtr[1]= (values[0]<<4) + 0x03;
+  }
 
-  ptr[0] = 0x9f;
-  int result = 0;
-  result = ptr[0];
-  printf("ptr code : %x \n" , ptr[0]);
+  printf("ptr code 0 : %x \n" , codeMemoryPtr[0]);
+  printf("ptr code 1 : %x \n" , codeMemoryPtr[1]);
   //return result;
 }
 
