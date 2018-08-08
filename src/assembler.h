@@ -19,7 +19,9 @@ static const instruc instrucs[] = {
 
 char *convertToLowerCase(char *str);
 void sec(uint8_t codeMemoryPtr[]);
-void inc(Tokenizer *tokenizer, uint8_t **codeMemoryPtr);
+void inc(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+void dec(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+void ser(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
 uint8_t *encodingRd(int Rd ,uint8_t opcode1, uint8_t opcode2);
 
 #endif // _ASSEMBLER_H

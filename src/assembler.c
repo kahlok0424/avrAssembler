@@ -33,7 +33,7 @@ char *convertToLowerCase(char *str)
     return buffer;
 }
 
-uint8_t *encodingRd(int Rd , uint8_t opcode1, uint8_t opcode2){
+/*uint8_t *encodingRd(int Rd , uint8_t opcode1, uint8_t opcode2){
   uint8_t ptr[1];
 
   if( (Rd) >= 16 ){
@@ -44,35 +44,61 @@ uint8_t *encodingRd(int Rd , uint8_t opcode1, uint8_t opcode2){
     ptr[1]= (Rd<<4) + opcode2;
   }
   return ptr;
-}
+}*/
 
 void sec(uint8_t codeMemoryPtr[]){
-  uint8_t ptr[1];
+  //uint8_t ptr[1];
 
-  codeMemoryPtr[0] = 0x94;
-  codeMemoryPtr[1] = 0x08;
+  codeMemoryPtr[0] = 0x91;
+  codeMemoryPtr[1] = 0x18;
   //(codeMemoryPtr) = ptr;
   //**(codeMemoryPtr+1) = ptr[1];
 }
 
-void inc(Tokenizer *tokenizer , uint8_t **codeMemoryPtr){
+void inc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){
 
   uint16_t values[1];    // values to store extraced value of Rd
   Token *token;
   uint8_t ptr[1] ;
-  codeMemoryPtr = &ptr;
+  //codeMemoryPtr = &ptr;
 
   getRd(tokenizer, values ,R0,R31);
   if( (*values) >= 16 ){
-    ptr[0]= 0x95;
-    ptr[1]= (values[0]<<4) + 0x03;
+    codeMemoryPtr[0]= 0x95;
+    codeMemoryPtr[1]= (values[0]<<4) + 0x03;
   }else{
-    ptr[0]= 0x94;
-    ptr[1]= (values[0]<<4) + 0x03;
+    codeMemoryPtr[0]= 0x94;
+    codeMemoryPtr[1]= (values[0]<<4) + 0x03;
   }
 
-  printf("ptr code 0 : %x \n" , *codeMemoryPtr);
+  printf("ptr code 0 : %x \n" , codeMemoryPtr);
   //printf("ptr code 1 : %x \n" , codeMemoryPtr[1]);
+}
+
+void dec(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){
+
+  uint16_t values[1];    // values to store extraced value of Rd
+  Token *token;
+
+  getRd(tokenizer, values ,R0,R31);
+  if( (*values) >= 16 ){
+    codeMemoryPtr[0]= 0x95;
+    codeMemoryPtr[1]= (values[0]<<4) + 0x0a;
+  }else{
+    codeMemoryPtr[0]= 0x94;
+    codeMemoryPtr[1]= (values[0]<<4) + 0x0a;
+  }
+}
+
+void ser(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){
+
+  uint16_t values[1];    // values to store extraced value of Rd
+  Token *token;
+
+  getRd(tokenizer, values ,R0,R31);
+
+    codeMemoryPtr[0]= 0xef;
+    codeMemoryPtr[1]= (values[0]<<4) + 0x0f;
 }
 
 void test_binary(void){
