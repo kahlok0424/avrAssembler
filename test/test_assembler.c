@@ -17,19 +17,39 @@ void test_convertToLowerCase_given_ABC_epxect_abc(void){
   TEST_ASSERT_EQUAL_STRING("abc", convertToLowerCase(line));
 }
 
+void test_sec_expect_correct_assembler(void){
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  sec(codeMemoryPtr);
+  printf("code  la: %x \n" , codeMemoryPtr[0]  );
+}
+
+void test_encodingRd_given_inc_opcode_expext_correctly_encoded(void){
+  uint8_t opCode1 = 0x94;
+  uint8_t opCode2 = 0x03;
+  int Rd = 16;
+  uint8_t *memoryPtr;
+
+  memoryPtr = encodingRd(Rd , opCode1 , opCode2);
+  //printf("lala : %x " , memoryPtr);
+  //TEST_ASSERT_EQUAL(0x9403 , memoryPtr );
+}
+
 void test_assembler_INC_given_R16_expect_opcode(void)
 {
   char *line = "R17";
   Token *token;
   Tokenizer *tokenizer;
-  uint8_t codeMemoryPtr[1];
+  uint8_t **codeMemoryPtr;
 
   tokenizer = createTokenizer(line);
   inc(tokenizer , codeMemoryPtr);
-  printf("code : %x \n" , codeMemoryPtr[0]);
-  printf("code 1: %x \n" , codeMemoryPtr[1]);
+  printf("code : %x \n" , *codeMemoryPtr  );
+  //printf("code 1: %x \n" , codeMemoryPtr[1]);
   Try{
-  TEST_ASSERT_EQUAL(0x9f13,codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0x9f13, *codeMemoryPtr);
 }Catch(ex){
   dumpTokenErrorMessage(ex, 1);
 }
