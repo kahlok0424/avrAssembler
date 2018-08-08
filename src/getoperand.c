@@ -26,15 +26,15 @@ int getRegister(Tokenizer *tokenizer, int minReg , int maxReg){
   }
   operands = (token->str);
   if(*(operands) != 'R' && *(operands) != 'r' ){
-    throwException(ERR_INVALID_IDENTIFIER, token, "Expect R/r but the identifier is %s" , operands);
+    throwException(ERR_INVALID_IDENTIFIER, token, "Expect R/r but the identifier is '%s' " , operands);
   }else{
     if(!(isdigit(operands[1]))){
-      throwException(ERR_INVALID_IDENTIFIER, token, "Expect integer but the identifier is %s" , operands);
+      throwException(ERR_INVALID_IDENTIFIER, token, "Expect integer but the identifier is '%s' " , operands);
     }else{
       operands++;
       regValue = atoi(operands);
       if(regValue > maxReg || regValue < minReg){
-        throwException(ERR_BEYOND_LIMIT, token, "%s beyond the limit of %d < d < %d" ,token->str,minReg,maxReg );
+        throwException(ERR_BEYOND_LIMIT, token, " '%s' beyond the limit of %d < d < %d " ,token->str,minReg,maxReg );
       }else { }
   }
   }
@@ -52,14 +52,14 @@ void getNextTokenAndVerify(Tokenizer *tokenizer , char *str){
      if(token->type == TOKEN_OPERATOR_TYPE){
        //token = getToken(tokenizer);
        //printf("token str = %s" , token->str);
-       throwException(ERR_INVALID_OPERATOR, token, "Expected to be not operator , but is %s  " ,token->str );
+       throwException(ERR_INVALID_OPERATOR, token, "Expected to be not operator , but is '%s' " ,token->str );
      }else { pushBackToken(tokenizer ,token); }
     }
      else{
-       throwException(ERR_INVALID_OPERATOR, token, "Expected to be %s , but is %s  " ,str,token->str );
+       throwException(ERR_INVALID_OPERATOR, token, "Expected to be '%s' , but is '%s' " ,str,token->str );
     }
   }else {
-    throwException(ERR_EXPECTING_OPERATOR, token, "Expected to be an operator, but is %s " ,token->str );
+    throwException(ERR_EXPECTING_OPERATOR, token, "Expected to be an operator, but is '%s' " ,token->str );
   }
 }
 

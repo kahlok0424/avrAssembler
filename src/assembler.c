@@ -41,14 +41,15 @@ void inc(Tokenizer *tokenizer , uint8_t **codeMemoryPtr){
 
   uint16_t values[1];    // values to store extraced value of Rd
   Token *token;
-  uint8_t ptr[4] ;
-  //ptr = *codeMemoryPtr;
+  uint8_t ptr[1] ;
+  //ptr = codeMemoryPtr;
 
   getRd(tokenizer, values ,R0,R31);
 
-  ptr[0] = 0x9;
+  ptr[0] = 0x9f;
   int result = 0;
-  result = values[0];
+  result = ptr[0];
+  printf("ptr code : %x \n" , ptr[0]);
   //return result;
 }
 

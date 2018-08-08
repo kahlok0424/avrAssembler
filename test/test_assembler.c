@@ -26,6 +26,7 @@ void test_assembler_INC_given_R16_expect_opcode(void)
 
   tokenizer = createTokenizer(line);
   inc(tokenizer , &codeMemoryPtr);
+  printf("code : %x" , *codeMemoryPtr);
   Try{
   //TEST_ASSERT_EQUAL(16,inc(line));
 }Catch(ex){
