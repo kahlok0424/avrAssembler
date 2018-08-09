@@ -58,13 +58,22 @@ void encodingRd(int Rd , uint8_t opcode1, uint8_t opcode2 , uint8_t codeMemoryPt
   }
 }
 
-void sec(uint8_t codeMemoryPtr[]){
-  //uint8_t ptr[1];
+int assembleOneInstruction(Tokenizer *tokenizer , uint8_t *codeMemoryPtr){
 
-  codeMemoryPtr[0] = 0x91;
-  codeMemoryPtr[1] = 0x18;
-  //(codeMemoryPtr) = ptr;
-  //**(codeMemoryPtr+1) = ptr[1];
+  Token *token;
+  int count =0;
+  int rel = 0;
+  token = getToken(tokenizer);
+
+  for(int i = 0 ; i < 4; i++){
+    if(token->str == xxinstructionMapTable[i].name ){
+      count++;
+      break;
+    }
+  }
+  rel = xxinstructionMapTable[count].assemble(tokenizer , codeMemoryPtr);
+  printf("i = %d" , count);
+  return rel;
 }
 
 /*void inc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){   //working function before uisng encodingRd()
@@ -87,88 +96,97 @@ void sec(uint8_t codeMemoryPtr[]){
   //printf("ptr code 1 : %x \n" , codeMemoryPtr[1]);
 }*/
 
-void inc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){    //increment
+int inc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){    //increment
 
   uint16_t values[1];    // values to store extraced value of Rd
   Token *token;
 
   getRd(tokenizer, values ,R0,R31);
   encodingRd(values[0] , 0x94, 0x03 , codeMemoryPtr);
+  return TWO_BYTE;
 }
 
-void dec(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //decrement
+int dec(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //decrement
 
   uint16_t values[1];    // values to store extraced value of Rd
   Token *token;
 
   getRd(tokenizer, values ,R0,R31);
   encodingRd(values[0] , 0x94, 0x0a , codeMemoryPtr);
+  return TWO_BYTE;
 }
 
-void com(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //One's complement
+int com(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //One's complement
 
   uint16_t values[1];    // values to store extraced value of Rd
   Token *token;
 
   getRd(tokenizer, values ,R0,R31);
   encodingRd(values[0] , 0x94, 0x00 , codeMemoryPtr);
+  return TWO_BYTE;
 }
 
-void neg(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //Two's complement
+int neg(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //Two's complement
 
   uint16_t values[1];    // values to store extraced value of Rd
   Token *token;
 
   getRd(tokenizer, values ,R0,R31);
   encodingRd(values[0] , 0x94, 0x01 , codeMemoryPtr);
+  return TWO_BYTE;
 }
 
-void push(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //push register to stack
+int push(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //push register to stack
 
   uint16_t values[1];    // values to store extraced value of Rd
   Token *token;
 
   getRd(tokenizer, values ,R0,R31);
   encodingRd(values[0] , 0x92, 0x0f , codeMemoryPtr);
+  return TWO_BYTE;
 }
 
-void pop(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //Pop stack
+int pop(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //Pop stack
 
   uint16_t values[1];    // values to store extraced value of Rd
   Token *token;
 
   getRd(tokenizer, values ,R0,R31);
   encodingRd(values[0] , 0x90, 0x0f , codeMemoryPtr);
+  return TWO_BYTE;
 }
 
-void lsr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //logical shift right
+int lsr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //logical shift right
 
   uint16_t values[1];    // values to store extraced value of Rd
   Token *token;
 
   getRd(tokenizer, values ,R0,R31);
   encodingRd(values[0] , 0x94, 0x06 , codeMemoryPtr);
+  return TWO_BYTE;
 }
 
-void asr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //arithmetic shift right
+int asr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //arithmetic shift right
 
   uint16_t values[1];    // values to store extraced value of Rd
   Token *token;
 
   getRd(tokenizer, values ,R0,R31);
   encodingRd(values[0] , 0x94, 0x05 , codeMemoryPtr);
+  return TWO_BYTE;
 }
 
-void swap(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //swap nibbles
+int swap(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //swap nibbles
 
   uint16_t values[1];    // values to store extraced value of Rd
   Token *token;
 
   getRd(tokenizer, values ,R0,R31);
   encodingRd(values[0] , 0x94, 0x02 , codeMemoryPtr);
+  return TWO_BYTE;
 }
 
-void lsl(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //logical shift left
+int lsl(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //logical shift left
 
   uint16_t values[1];    // values to store extraced value of Rd
   Token *token;
@@ -183,15 +201,14 @@ void lsl(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //logical shift le
     codeMemoryPtr[0]= 0x0c;
     codeMemoryPtr[1]= (values[0]<<4) + (values[0]);
   }
+  return TWO_BYTE;
 }
 
-void clr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //clear register
+int clr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //clear register
 
   uint16_t values[1];    // values to store extraced value of Rd
-  Token *token;
 
   getRd(tokenizer, values ,R0,R31);
-  //encodingRd(values[0] , 0x0c, 0x00 , codeMemoryPtr);
 
   if( (*values) >= 16 ){
     codeMemoryPtr[0]= 0x27;
@@ -200,15 +217,14 @@ void clr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //clear register
     codeMemoryPtr[0]= 0x24;
     codeMemoryPtr[1]= (values[0]<<4) + (values[0]);
   }
+  return TWO_BYTE;
 }
 
-void tst(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //test for zero or minus
+int tst(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //test for zero or minus
 
   uint16_t values[1];    // values to store extraced value of Rd
-  Token *token;
 
   getRd(tokenizer, values ,R0,R31);
-  //encodingRd(values[0] , 0x0c, 0x00 , codeMemoryPtr);
 
   if( (*values) >= 16 ){
     codeMemoryPtr[0]= 0x23;
@@ -217,15 +233,15 @@ void tst(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //test for zero or
     codeMemoryPtr[0]= 0x20;
     codeMemoryPtr[1]= (values[0]<<4) + (values[0]);
   }
+  return TWO_BYTE;
 }
 
-void rol(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //rotate left through carry
+int rol(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //rotate left through carry
 
   uint16_t values[1];    // values to store extraced value of Rd
   Token *token;
 
   getRd(tokenizer, values ,R0,R31);
-  //encodingRd(values[0] , 0x0c, 0x00 , codeMemoryPtr);
 
   if( (*values) >= 16 ){
     codeMemoryPtr[0]= 0x1f;
@@ -234,14 +250,18 @@ void rol(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //rotate left thro
     codeMemoryPtr[0]= 0x1c;
     codeMemoryPtr[1]= (values[0]<<4) + (values[0]);
   }
+  return TWO_BYTE;
 }
 
-void ser(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){   //set all register bit
+int ser(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){   //set all register bit
 
   uint16_t values[1];    // values to store extraced value of Rd
   Token *token;
 
   getRd(tokenizer, values ,R16,R31);
+
   codeMemoryPtr[0]= 0xef;
-  codeMemoryPtr[1]= (values[0] << 4) + 0x0f;
+  codeMemoryPtr[1]= (values[0] - 16) + 0x0f;
+
+  return TWO_BYTE;
 }
