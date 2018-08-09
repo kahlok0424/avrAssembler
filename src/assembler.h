@@ -3,19 +3,21 @@
 
 #include "Tokenizer.h"
 
-#define OPERAND_TYPE_RD 1
+#define TWO_BYTE  2
 #define TokenMatches(token,str2cmp)  (strcmp(token,str2cmp )== 0)
 
-typedef struct {
-  char *str;
-  int operandType;
-  int opCode;
-}instruc;
+typedef struct InstructionMap InstructionMap;
+typedef int(*InstructionFuncPtr)(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 
-static const instruc instrucs[] = {
-  {"INC" , OPERAND_TYPE_RD , 0b1001010},
-  {"DEC" , OPERAND_TYPE_RD , 0b1001010}
+struct InstructionMap{
+  char *name;
+  InstructionFuncPtr assemble;
 };
+
+/*InstructionMap instructionMapTable[] = {
+  {"INC" , inc},
+  {"DEC" , dec}
+};*/
 
 char *convertToLowerCase(char *str);
 void sec(uint8_t codeMemoryPtr[]);

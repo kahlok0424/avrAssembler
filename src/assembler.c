@@ -243,5 +243,5 @@ void ser(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){   //set all register b
 
   getRd(tokenizer, values ,R16,R31);
   codeMemoryPtr[0]= 0xef;
-  codeMemoryPtr[1]= (values[0] - 16) + 0x0f;
+  codeMemoryPtr[1]= (values[0] << 4) + 0x0f;
 }

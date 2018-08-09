@@ -493,7 +493,7 @@ void test_assembler_ROL_given_R19_expect_assembler_correctly(void)
 }
 }
 
-/*void test_assembler_SER_given_R6_expect_exception_thrown(void)
+void test_assembler_SER_given_R6_expect_exception_thrown(void)
 {
   char *line = "R6";
   Token *token;
@@ -501,13 +501,29 @@ void test_assembler_ROL_given_R19_expect_assembler_correctly(void)
   uint8_t codeMemoryPtr[1];
 
   tokenizer = createTokenizer(line);
-  ser(tokenizer , codeMemoryPtr);
   Try{
+  ser(tokenizer , codeMemoryPtr);
   TEST_FAIL_MESSAGE("Expected ERR_BEYOND_LIMIT exception to be thrown, but none received.");
 }Catch(ex){
   dumpTokenErrorMessage(ex, 1);
 }
-}*/
+}
+
+void test_assembler_SER_given_R31_expect_encoed_correctly(void)
+{
+  char *line = "R31";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  Try{
+  ser(tokenizer , codeMemoryPtr);
+  TEST_ASSERT_EQUAL_HEX16(0xffef , *(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
 
 void test_getToken_given_random_line(void){
   char *line = "inc R12 +++";
