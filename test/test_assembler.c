@@ -23,18 +23,18 @@ void test_sec_expect_correct_assembler(void){
   uint8_t codeMemoryPtr[1];
 
   //sec(codeMemoryPtr);
-  printf("code  la: %x \n" , codeMemoryPtr[0]  );
+  //printf("code  la: %x \n" , codeMemoryPtr[0]  );
 }
 
-void test_encodingRd_given_inc_opcode_expext_correctly_encoded(void){
-  uint8_t opCode1 = 0x94;
-  uint8_t opCode2 = 0x03;
+void test_encodingRd_given_opcode_expext_correctly_encoded(void){
+  uint8_t opCode1 = 0x12;
+  uint8_t opCode2 = 0x34;
   int Rd = 16;
-  uint8_t *memoryPtr;
+  uint8_t memoryPtr[1];
 
-  //memoryPtr = encodingRd(Rd , opCode1 , opCode2);
-  //printf("lala : %x " , memoryPtr);
-  //TEST_ASSERT_EQUAL(0x9403 , memoryPtr );
+  encodingRd(Rd , opCode1,opCode2 , memoryPtr );
+  TEST_ASSERT_EQUAL(0x13 , memoryPtr[0]);
+  TEST_ASSERT_EQUAL(0x34 , memoryPtr[1]);
 }
 
 void test_assembler_INC_given_R07_expect_assembler_correctly(void)
@@ -46,8 +46,6 @@ void test_assembler_INC_given_R07_expect_assembler_correctly(void)
 
   tokenizer = createTokenizer(line);
   inc(tokenizer , codeMemoryPtr);
-  printf("code : %x \n" , codeMemoryPtr[0]  );
-  printf("code 1: %x \n" , codeMemoryPtr[1]);
   Try{
   TEST_ASSERT_EQUAL(0x94, codeMemoryPtr[0]);
   TEST_ASSERT_EQUAL(0x73, codeMemoryPtr[1]);
@@ -55,7 +53,6 @@ void test_assembler_INC_given_R07_expect_assembler_correctly(void)
   dumpTokenErrorMessage(ex, 1);
 }
 }
-
 
 void test_assembler_INC_given_R17_expect_assembler_correctly(void)
 {
@@ -66,8 +63,8 @@ void test_assembler_INC_given_R17_expect_assembler_correctly(void)
 
   tokenizer = createTokenizer(line);
   inc(tokenizer , codeMemoryPtr);
-  printf("code : %x \n" , codeMemoryPtr[0]  );
-  printf("code 1: %x \n" , codeMemoryPtr[1]);
+  //printf("code : %x \n" , codeMemoryPtr[0] );
+  //printf("code 1: %x \n" , codeMemoryPtr[1]);
   Try{
   TEST_ASSERT_EQUAL(0x95, codeMemoryPtr[0]);
   TEST_ASSERT_EQUAL(0x13, codeMemoryPtr[1]);
@@ -111,7 +108,392 @@ void test_assembler_DEC_given_R20_expect_assembler_correctly(void)
 }
 }
 
-void test_assembler_SER_given_R6_expect_assembler_correctly(void)
+void test_assembler_COM_given_R0_expect_assembler_correctly(void)
+{
+  char *line = "R0";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  com(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x94, codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0x00, codeMemoryPtr[1]);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_COM_given_R21_expect_assembler_correctly(void)
+{
+  char *line = "R21";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  com(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x95, codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0x50, codeMemoryPtr[1]);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_NEG_given_R0_expect_assembler_correctly(void)
+{
+  char *line = "R0";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  neg(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x94, codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0x01, codeMemoryPtr[1]);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_NEG_given_R21_expect_assembler_correctly(void)
+{
+  char *line = "R21";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  neg(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x95, codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0x51, codeMemoryPtr[1]);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_PUSH_given_R1_expect_assembler_correctly(void)
+{
+  char *line = "R1";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  push(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x92, codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0x1f, codeMemoryPtr[1]);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_PUSH_given_R26_expect_assembler_correctly(void)
+{
+  char *line = "R26";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  push(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x93, codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0xaf, codeMemoryPtr[1]);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_POP_given_R2_expect_assembler_correctly(void)
+{
+  char *line = "R2";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  pop(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x90, codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0x2f, codeMemoryPtr[1]);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_POP_given_R27_expect_assembler_correctly(void)
+{
+  char *line = "R27";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  pop(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x91, codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0xbf, codeMemoryPtr[1]);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_LSR_given_R8_expect_assembler_correctly(void)
+{
+  char *line = "R8";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  lsr(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x94, codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0x86, codeMemoryPtr[1]);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_LSR_given_R28_expect_assembler_correctly(void)
+{
+  char *line = "R28";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  lsr(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x95, codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0xc6, codeMemoryPtr[1]);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_ASR_given_R8_expect_assembler_correctly(void)
+{
+  char *line = "R8";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  asr(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x94, codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0x85, codeMemoryPtr[1]);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_ASR_given_R28_expect_assembler_correctly(void)
+{
+  char *line = "R28";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  asr(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x95, codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0xc5, codeMemoryPtr[1]);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_SWAP_given_R10_expect_assembler_correctly(void)
+{
+  char *line = "R10";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  swap(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x94, codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0xa2, codeMemoryPtr[1]);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_SWAP_given_R30_expect_assembler_correctly(void)
+{
+  char *line = "R30";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  swap(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x95, codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0xe2, codeMemoryPtr[1]);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_LSL_given_R3_expect_assembler_correctly(void)
+{
+  char *line = "R3";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  lsl(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x0c, codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0x33, codeMemoryPtr[1]);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_LSL_given_R19_expect_assembler_correctly(void)
+{
+  char *line = "R19";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  lsl(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x0f, codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0x33, codeMemoryPtr[1]);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_LSL_given_R29_expect_assembler_correctly(void)
+{
+  char *line = "R29";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t *codeMemoryPtr[4];
+
+  tokenizer = createTokenizer(line);
+  lsl(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL_HEX16(0xdd0f, *(uint16_t *)codeMemoryPtr);
+  //TEST_ASSERT_EQUAL(0xdd, codeMemoryPtr[1]);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_CLR_given_R9_expect_assembler_correctly(void)
+{
+  char *line = "R9";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  clr(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL_HEX16(0x9924, *(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_CLR_given_R19_expect_assembler_correctly(void)
+{
+  char *line = "R19";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  clr(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL_HEX16(0x3327, *(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_TST_given_R9_expect_assembler_correctly(void)
+{
+  char *line = "R2";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  tst(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL_HEX16(0x2220, *(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_TST_given_R19_expect_assembler_correctly(void)
+{
+  char *line = "R23";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  tst(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL_HEX16(0x7723, *(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_ROL_given_R9_expect_assembler_correctly(void)
+{
+  char *line = "R8";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  rol(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL_HEX16(0x881c, *(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_ROL_given_R19_expect_assembler_correctly(void)
+{
+  char *line = "R28";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+
+  tokenizer = createTokenizer(line);
+  rol(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL_HEX16(0xcc1f, *(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+/*void test_assembler_SER_given_R6_expect_exception_thrown(void)
 {
   char *line = "R6";
   Token *token;
@@ -121,12 +503,11 @@ void test_assembler_SER_given_R6_expect_assembler_correctly(void)
   tokenizer = createTokenizer(line);
   ser(tokenizer , codeMemoryPtr);
   Try{
-  TEST_ASSERT_EQUAL(0xef, codeMemoryPtr[0]);
-  TEST_ASSERT_EQUAL(0x6f, codeMemoryPtr[1]);
+  TEST_FAIL_MESSAGE("Expected ERR_BEYOND_LIMIT exception to be thrown, but none received.");
 }Catch(ex){
   dumpTokenErrorMessage(ex, 1);
 }
-}
+}*/
 
 void test_getToken_given_random_line(void){
   char *line = "inc R12 +++";
