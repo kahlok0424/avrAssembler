@@ -45,11 +45,31 @@ void test_assembleOneInstruction_given_INC_R7_expect_assemble_correctly(void)
   uint8_t codeMemoryPtr[1];
   int byte_number = 0;
 
+
+  Try{
   tokenizer = createTokenizer(line);
   byte_number = assembleOneInstruction(tokenizer , codeMemoryPtr);
-  Try{
   TEST_ASSERT_EQUAL_HEX16(0x7394,*(uint16_t *)codeMemoryPtr);
-  TEST_ASSERT_EQUAL(1 , byte_number);
+  TEST_ASSERT_EQUAL(2 , byte_number);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembleOneInstruction_given_DEC_r10_expect_assemble_correctly(void)
+{
+  char *line = "dec r10";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+
+  Try{
+  tokenizer = createTokenizer(line);
+  byte_number = assembleOneInstruction(tokenizer , codeMemoryPtr);
+  TEST_ASSERT_EQUAL_HEX16(0xaa94,*(uint16_t *)codeMemoryPtr);
+  TEST_ASSERT_EQUAL(2 , byte_number);
 }Catch(ex){
   dumpTokenErrorMessage(ex, 1);
 }
@@ -538,15 +558,16 @@ void test_assembler_ROL_given_R19_expect_assembler_correctly(void)
 }
 }
 
-/*void test_assembler_SER_given_R31_expect_encoed_correctly(void)
+void test_assembler_SER_given_R31_expect_encoed_correctly(void)
 {
   char *line = "R31";
   Tokenizer *tokenizer;
-  uint8_t codeMemoryPtr[2];
+  uint8_t codeMemoryPtr[1];
   int byte_number = 0;
 
-  tokenizer = createTokenizer(line);
+
   Try{
+  tokenizer = createTokenizer(line);
   byte_number = ser(tokenizer , codeMemoryPtr);
   TEST_ASSERT_EQUAL_HEX16(0xffef ,*(uint16_t *)codeMemoryPtr);
 }Catch(ex){
@@ -558,17 +579,18 @@ void test_assembler_SER_given_R20_expect_encoed_correctly(void)
 {
   char *line = "R20";
   Tokenizer *tokenizer;
-  uint8_t codeMemoryPtr[2];
+  uint8_t codeMemoryPtr[1];
   int byte_number = 0;
 
-  tokenizer = createTokenizer(line);
+
   Try{
+  tokenizer = createTokenizer(line);
   byte_number = ser(tokenizer , codeMemoryPtr);
   TEST_ASSERT_EQUAL_HEX16(0x4fef ,*(uint16_t *)codeMemoryPtr);
 }Catch(ex){
   dumpTokenErrorMessage(ex, 1);
 }
-}*/
+}
 
 void test_assembler_SER_given_R6_expect_exception_thrown(void)
 {

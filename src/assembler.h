@@ -33,7 +33,7 @@ int rol(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
 int assembleOneInstruction(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 void encodingRd(int Rd , uint8_t opcode1, uint8_t opcode2 , uint8_t codeMemoryPtr[]);
 
-static const InstructionMap xxinstructionMapTable[] = {
+static const InstructionMap instructionsMapTable[] = {
   {"inc" , inc},
   {"dec" , dec},
   {"com" , com}

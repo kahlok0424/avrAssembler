@@ -65,13 +65,17 @@ int assembleOneInstruction(Tokenizer *tokenizer , uint8_t *codeMemoryPtr){
   int rel = 0;
   token = getToken(tokenizer);
 
-  for(int i = 0 ; i < 4; i++){
-    if(token->str == xxinstructionMapTable[i].name ){
+  if(token->type != TOKEN_IDENTIFIER_TYPE){
+    throwException(ERR_EXPECTING_IDENTIFIER, token, "Expected to be identifier , but is '%s' " ,token->str );
+  }else{
+  for(int i = 0 ; i < sizeof(instructionsMapTable); i++){
+    if(token->str == instructionsMapTable[i].name ){
       count++;
       break;
     }
   }
-  rel = xxinstructionMapTable[count].assemble(tokenizer , codeMemoryPtr);
+}
+  rel = instructionsMapTable[count].assemble(tokenizer , codeMemoryPtr);
   printf("i = %d" , count);
   return rel;
 }
@@ -261,7 +265,7 @@ int ser(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){   //set all register bi
   getRd(tokenizer, values ,R16,R31);
 
   codeMemoryPtr[0]= 0xef;
-  codeMemoryPtr[1]= (values[0] - 16) + 0x0f;
+  codeMemoryPtr[1]= (values[0]) <<4 + 0x0f;
 
   return TWO_BYTE;
 }
