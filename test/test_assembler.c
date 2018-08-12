@@ -94,6 +94,57 @@ void test_assembleOneInstruction_given_SWAP_r9_expect_assemble_correctly(void)
 }
 }
 
+void test_assembleOneInstruction_given_ROl_r31_expect_assemble_correctly(void)
+{
+  char *line = "roL r31";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+
+  Try{
+  tokenizer = createTokenizer(line);
+  byte_number = assembleOneInstruction(tokenizer , codeMemoryPtr);
+  TEST_ASSERT_EQUAL_HEX16(0xff1f,*(uint16_t *)codeMemoryPtr);
+  TEST_ASSERT_EQUAL(2 , byte_number);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembleOneInstruction_given_trash_r31_expect_exception_not_found_thrown(void)
+{
+  char *line = "trash r31";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  Try{
+  tokenizer = createTokenizer(line);
+  byte_number = assembleOneInstruction(tokenizer , codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembleOneInstruction_given_rubish_expect_exception_thrown(void)
+{
+  char *line = "*&$%^&$";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  Try{
+  tokenizer = createTokenizer(line);
+  byte_number = assembleOneInstruction(tokenizer , codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
 void test_assembler_INC_given_R7_expect_assembler_correctly(void)
 {
   char *line = "R7";

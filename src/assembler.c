@@ -9,7 +9,7 @@
 #include "Error.h"
 #include "assembler.h"
 
-static const InstructionMap instructionsMapTable[] = {
+InstructionMap instructionsMapTable[] = {
   {"inc" , inc},
   {"dec" , dec},
   {"com" , com},
@@ -68,6 +68,7 @@ int assembleOneInstruction(Tokenizer *tokenizer , uint8_t *codeMemoryPtr){
 
   Token *token;
   int tableNo =0;
+  int check = 0;
   int rel = 0;
   token = getToken(tokenizer);
   char *temp = convertToLowerCase(token->str);
@@ -75,15 +76,24 @@ int assembleOneInstruction(Tokenizer *tokenizer , uint8_t *codeMemoryPtr){
   if(token->type != TOKEN_IDENTIFIER_TYPE){
     throwException(ERR_EXPECTING_IDENTIFIER, token, "Expected to be identifier , but is '%s' " ,token->str );
   }else{
-  for(int i = 0 ; i < sizeof(instructionsMapTable); i++){
-    if( !strcmp(temp, instructionsMapTable[i].name) ){
+  for(int i = 0 ; i < 20; i++){
+    if( strcmp(temp, instructionsMapTable[i].name) == 0 ){
       tableNo = i;
+      check =1;
       break;
     }else{
+      check =0;
     }
   }
 }
-  rel = instructionsMapTable[tableNo].assemble(tokenizer , codeMemoryPtr);
+
+  if(check != 1){
+    throwException(ERR_INSTRUCTION_NOT_FOUND, token, "The instruction '%s' is not found in the table " , token->str);
+  }
+  else {
+    rel = instructionsMapTable[tableNo].assemble(tokenizer , codeMemoryPtr);
+  }
+  freeToken(tokenizer);
   return rel;
 }
 
