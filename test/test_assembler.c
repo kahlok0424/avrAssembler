@@ -58,7 +58,7 @@ void test_assembleOneInstruction_given_INC_R7_expect_assemble_correctly(void)
 
 void test_assembleOneInstruction_given_DEC_r10_expect_assemble_correctly(void)
 {
-  char *line = "dec r10";
+  char *line = "DEC r10";
   Token *token;
   Tokenizer *tokenizer;
   uint8_t codeMemoryPtr[1];
@@ -75,9 +75,28 @@ void test_assembleOneInstruction_given_DEC_r10_expect_assemble_correctly(void)
 }
 }
 
-void test_assembler_INC_given_R07_expect_assembler_correctly(void)
+void test_assembleOneInstruction_given_SWAP_r9_expect_assemble_correctly(void)
 {
-  char *line = "R07";
+  char *line = "Swap r9";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+
+  Try{
+  tokenizer = createTokenizer(line);
+  byte_number = assembleOneInstruction(tokenizer , codeMemoryPtr);
+  TEST_ASSERT_EQUAL_HEX16(0x9294,*(uint16_t *)codeMemoryPtr);
+  TEST_ASSERT_EQUAL(2 , byte_number);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_INC_given_R7_expect_assembler_correctly(void)
+{
+  char *line = "R7";
   Token *token;
   Tokenizer *tokenizer;
   uint8_t codeMemoryPtr[1];

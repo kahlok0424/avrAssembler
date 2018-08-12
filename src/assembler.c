@@ -9,6 +9,25 @@
 #include "Error.h"
 #include "assembler.h"
 
+static const InstructionMap instructionsMapTable[] = {
+  {"inc" , inc},
+  {"dec" , dec},
+  {"com" , com},
+  {"neg" , neg},
+  {"push" , push},
+  {"pop" , pop},
+  {"lsr" , lsr},
+  {"asr" , asr},
+  {"swap" , swap},
+  {"lsl" , lsl},
+  {"clr" , clr},
+  {"tst" , tst},
+  {"ser" , ser},
+  {"rol" , rol}
+};
+
+
+
 /**
 * REMEMBER TO USE---> git config --global --replace-all user.name "FName LName" before commit
 * all instruction should look like this --->   int add(Tokenizer *tokenizer , uint16_t **codeMemoryPtr);
@@ -33,19 +52,6 @@ char *convertToLowerCase(char *str)
     return buffer;
 }
 
-/*uint8_t *encodingRd(int Rd , uint8_t opcode1, uint8_t opcode2){    //has bug
-  static uint8_t ptr[1];
-
-  if( (Rd) >= 16 ){
-    ptr[0]= opcode1 +1;
-    ptr[1]= (Rd<<4) + opcode2;
-  }else{
-    ptr[0]= opcode1;
-    ptr[1]= (Rd<<4) + opcode2;
-  }
-  return ptr;
-}*/
-
 void encodingRd(int Rd , uint8_t opcode1, uint8_t opcode2 , uint8_t codeMemoryPtr[]){
   uint8_t ptr[1];
 
@@ -61,44 +67,25 @@ void encodingRd(int Rd , uint8_t opcode1, uint8_t opcode2 , uint8_t codeMemoryPt
 int assembleOneInstruction(Tokenizer *tokenizer , uint8_t *codeMemoryPtr){
 
   Token *token;
-  int count =0;
+  int tableNo =0;
   int rel = 0;
   token = getToken(tokenizer);
+  char *temp = convertToLowerCase(token->str);
 
   if(token->type != TOKEN_IDENTIFIER_TYPE){
     throwException(ERR_EXPECTING_IDENTIFIER, token, "Expected to be identifier , but is '%s' " ,token->str );
   }else{
   for(int i = 0 ; i < sizeof(instructionsMapTable); i++){
-    if(token->str == instructionsMapTable[i].name ){
-      count++;
+    if( !strcmp(temp, instructionsMapTable[i].name) ){
+      tableNo = i;
       break;
+    }else{
     }
   }
 }
-  rel = instructionsMapTable[count].assemble(tokenizer , codeMemoryPtr);
-  printf("i = %d" , count);
+  rel = instructionsMapTable[tableNo].assemble(tokenizer , codeMemoryPtr);
   return rel;
 }
-
-/*void inc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){   //working function before uisng encodingRd()
-
-  uint16_t values[1];    // values to store extraced value of Rd
-  Token *token;
-  uint8_t ptr[1] ;
-  //codeMemoryPtr = &ptr;
-
-  getRd(tokenizer, values ,R0,R31);
-  if( (*values) >= 16 ){
-    codeMemoryPtr[0]= 0x95;
-    codeMemoryPtr[1]= (values[0]<<4) + 0x03;
-  }else{
-    codeMemoryPtr[0]= 0x94;
-    codeMemoryPtr[1]= (values[0]<<4) + 0x03;
-  }
-
-  printf("ptr code 0 : %x \n" , codeMemoryPtr);
-  //printf("ptr code 1 : %x \n" , codeMemoryPtr[1]);
-}*/
 
 int inc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){    //increment
 
@@ -265,7 +252,7 @@ int ser(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){   //set all register bi
   getRd(tokenizer, values ,R16,R31);
 
   codeMemoryPtr[0]= 0xef;
-  codeMemoryPtr[1]= (values[0]) <<4 + 0x0f;
+  codeMemoryPtr[1]= ((values[0]) <<4 )+ 0x0f;
 
   return TWO_BYTE;
 }
