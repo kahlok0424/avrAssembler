@@ -46,7 +46,7 @@ void test_encodingRd_given_opcode_expect_correctly_encoded(void){
   TEST_ASSERT_EQUAL(0x34 , memoryPtr[1]);
 }
 
-/*void test_assembleOneInstruction_given_INC_R7_expect_assemble_correctly(void)
+void test_assembleOneInstruction_given_INC_R7_expect_assemble_correctly(void)
 {
   char *line = "inc R7";
   Token *token;
@@ -152,7 +152,7 @@ void test_assembleOneInstruction_given_rubish_expect_exception_thrown(void)
 }Catch(ex){
   dumpTokenErrorMessage(ex, 1);
 }
-}*/
+}
 
 void test_assembler_sec_expect_assembler_correctly(void)
 {

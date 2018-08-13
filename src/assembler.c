@@ -99,7 +99,7 @@ int assembleOneInstruction(Tokenizer *tokenizer , uint8_t *codeMemoryPtr){
   if(token->type != TOKEN_IDENTIFIER_TYPE){
     throwException(ERR_EXPECTING_IDENTIFIER, token, "Expected to be identifier , but is '%s' " ,token->str );
   }else{
-  for(int i = 0 ; i < 20; i++){
+  for(int i = 0 ; i < 34; i++){
     if( strcmp(temp, instructionsMapTable[i].name) == 0 ){
       tableNo = i;
       check =1;
