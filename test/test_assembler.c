@@ -26,7 +26,16 @@ void test_sec_expect_correct_assembler(void){
   //printf("code  la: %x \n" , codeMemoryPtr[0]  );
 }
 
-void test_encodingRd_given_opcode_expext_correctly_encoded(void){
+void test_encodingNoOperand_given_45_67_expect_encoded_correctly(void){
+  uint8_t opCode1 = 0x45;
+  uint8_t opCode2 = 0x67;
+  uint8_t memoryPtr[1];
+
+  encodingNoOperand(opCode1,opCode2 , memoryPtr );
+  TEST_ASSERT_EQUAL(0x6745,*(uint16_t *)memoryPtr);
+}
+
+void test_encodingRd_given_opcode_expect_correctly_encoded(void){
   uint8_t opCode1 = 0x12;
   uint8_t opCode2 = 0x34;
   int Rd = 16;
@@ -37,7 +46,7 @@ void test_encodingRd_given_opcode_expext_correctly_encoded(void){
   TEST_ASSERT_EQUAL(0x34 , memoryPtr[1]);
 }
 
-void test_assembleOneInstruction_given_INC_R7_expect_assemble_correctly(void)
+/*void test_assembleOneInstruction_given_INC_R7_expect_assemble_correctly(void)
 {
   char *line = "inc R7";
   Token *token;
@@ -131,7 +140,7 @@ void test_assembleOneInstruction_given_trash_r31_expect_exception_not_found_thro
 
 void test_assembleOneInstruction_given_rubish_expect_exception_thrown(void)
 {
-  char *line = "*&$%^&$";
+  char *line = "*&$^&$";
   Token *token;
   Tokenizer *tokenizer;
   uint8_t codeMemoryPtr[1];
@@ -140,6 +149,24 @@ void test_assembleOneInstruction_given_rubish_expect_exception_thrown(void)
   Try{
   tokenizer = createTokenizer(line);
   byte_number = assembleOneInstruction(tokenizer , codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}*/
+
+void test_assembler_sec_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Token *token;
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = sec(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x94, codeMemoryPtr[0]);
+  TEST_ASSERT_EQUAL(0x08, codeMemoryPtr[1]);
 }Catch(ex){
   dumpTokenErrorMessage(ex, 1);
 }
