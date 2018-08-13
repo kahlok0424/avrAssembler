@@ -43,15 +43,30 @@ InstructionMap instructionsMapTable[] = {
   {"clr" , clr},
   {"tst" , tst},
   {"ser" , ser},
-  {"rol" , rol}
+  {"rol" , rol},
+  /*{"add" , add},  // RdRr operand
+  {"adc" , adc},
+  {"sub" , sub},
+  {"sbc" , sbc},
+  {"and" , and},
+  {"or" , or},
+  {"eor" , eor},
+  {"mul" , mul},
+  {"cpse" , cpse},
+  {"cp" , cp},
+  {"cpc" , cpc},
+  {"mov" , mov},
+  {"movw" , movw}*/
 };
 
 
 /**
+* NOTES
+* ------------------------------------------------------------------------------------------------
 * REMEMBER TO USE---> git config --global --replace-all user.name "FName LName" before commit
-* all instruction should look like this --->   int add(Tokenizer *tokenizer , uint16_t **codeMemoryPtr);
-* chat *ptr = *codeMemoryPtr;
-* ptr[] = encoding();
+* all instruction should look like this --->   int add(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+* instructions done : 34
+* remember do from muls -> fmuls
 * getRdRr(Tokenizer *tokenizer , uint8_t data[]);
 **/
 
