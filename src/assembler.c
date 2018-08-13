@@ -126,25 +126,25 @@ int sec(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]){  //set carry flag
   return TWO_BYTE;
 }
 
-int clc(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]){  //set carry flag
+int clc(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]){  //clear carry flag
 
   encodingNoOperand(0x94,0x88,codeMemoryPtr);
   return TWO_BYTE;
 }
 
-int sen(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]){  //set carry flag
+int sen(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]){  //set negative flag
 
   encodingNoOperand(0x94,0x28,codeMemoryPtr);
   return TWO_BYTE;
 }
 
-int cln(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]){  //set carry flag
+int cln(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]){  //clear negative flag
 
   encodingNoOperand(0x94,0xa8,codeMemoryPtr);
   return TWO_BYTE;
 }
 
-int sez(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]){  //set carry flag
+int sez(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]){  //set zero flag
 
   encodingNoOperand(0x94,0x18,codeMemoryPtr);
   return TWO_BYTE;

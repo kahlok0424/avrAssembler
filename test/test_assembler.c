@@ -157,7 +157,6 @@ void test_assembleOneInstruction_given_rubish_expect_exception_thrown(void)
 void test_assembler_sec_expect_assembler_correctly(void)
 {
   char *line = " ";
-  Token *token;
   Tokenizer *tokenizer;
   uint8_t codeMemoryPtr[1];
   int byte_number = 0;
@@ -165,8 +164,311 @@ void test_assembler_sec_expect_assembler_correctly(void)
   tokenizer = createTokenizer(line);
   byte_number = sec(tokenizer , codeMemoryPtr);
   Try{
-  TEST_ASSERT_EQUAL(0x94, codeMemoryPtr[0]);
-  TEST_ASSERT_EQUAL(0x08, codeMemoryPtr[1]);
+  TEST_ASSERT_EQUAL(0x0894,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_clc_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = clc(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x8894,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_sen_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = sen(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x2894,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_cln_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = cln(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0xa894,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_sez_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = sez(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x1894,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_clz_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = clz(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x9894,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_sei_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = sei(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x7894,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_cli_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = cli(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0xf894,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_ses_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = ses(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x4894,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_cls_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = cls(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0xc894,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_set_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = set(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x6894,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_clt_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = clt(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0xe894,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_seh_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = seh(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x5894,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_clh_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = clh(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0xd894,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_nop_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = nop(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x0000,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_sleep_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = sleep(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x8895,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_wdr_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = wdr(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0xa895,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_breakAVR_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = breakAVR(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x9895,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_sev_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = sev(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0x3894,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_clv_expect_assembler_correctly(void)
+{
+  char *line = " ";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[1];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  byte_number = clv(tokenizer , codeMemoryPtr);
+  Try{
+  TEST_ASSERT_EQUAL(0xb894,*(uint16_t *)codeMemoryPtr);
 }Catch(ex){
   dumpTokenErrorMessage(ex, 1);
 }
@@ -175,7 +477,6 @@ void test_assembler_sec_expect_assembler_correctly(void)
 void test_assembler_INC_given_R7_expect_assembler_correctly(void)
 {
   char *line = "R7";
-  Token *token;
   Tokenizer *tokenizer;
   uint8_t codeMemoryPtr[1];
   int byte_number = 0;
