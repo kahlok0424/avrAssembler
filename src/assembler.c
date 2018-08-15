@@ -29,7 +29,7 @@ InstructionMap instructionsMapTable[] = {
   {"wdr" , wdr},
   {"break" , breakAVR},
   {"sev" , sev},
-  {"clv" , clv},
+  {"clv" , clv},   //20
   {"inc" , inc},  //single operand
   {"dec" , dec},
   {"com" , com},
@@ -43,20 +43,19 @@ InstructionMap instructionsMapTable[] = {
   {"clr" , clr},
   {"tst" , tst},
   {"ser" , ser},
-  {"rol" , rol},
-  /*{"add" , add},  // RdRr operand
+  {"rol" , rol},  //14
+  {"add" , addRdRr},  // RdRr operand
   {"adc" , adc},
   {"sub" , sub},
   {"sbc" , sbc},
-  {"and" , and},
-  {"or" , or},
+  {"and" , andRdRr},
+  {"or" , orRdRr},
   {"eor" , eor},
   {"mul" , mul},
   {"cpse" , cpse},
   {"cp" , cp},
   {"cpc" , cpc},
-  {"mov" , mov},
-  {"movw" , movw}*/
+  {"mov" , mov},  //12
 };
 
 
@@ -102,6 +101,17 @@ void encodingRd(int Rd , uint8_t opcode1, uint8_t opcode2 , uint8_t codeMemoryPt
   }
 }
 
+void encodingRdRr(int Rd, int Rr, uint8_t opcode, uint8_t codeMemoryPtr[]){
+
+  codeMemoryPtr[0] = opcode +  (( Rr >>4 ) <<1) + ( Rd >>4);
+  if(Rr >= 16){
+    codeMemoryPtr[1] = (Rd<<4)+ (Rr-16);
+  }
+  else{
+  codeMemoryPtr[1] = (Rd<<4)+ Rr;
+  }
+}
+
 int assembleOneInstruction(Tokenizer *tokenizer , uint8_t *codeMemoryPtr){
 
   Token *token;
@@ -114,7 +124,7 @@ int assembleOneInstruction(Tokenizer *tokenizer , uint8_t *codeMemoryPtr){
   if(token->type != TOKEN_IDENTIFIER_TYPE){
     throwException(ERR_EXPECTING_IDENTIFIER, token, "Expected to be identifier , but is '%s' " ,token->str );
   }else{
-  for(int i = 0 ; i < 34; i++){
+  for(int i = 0 ; i < 46; i++){
     if( strcmp(temp, instructionsMapTable[i].name) == 0 ){
       tableNo = i;
       check =1;
@@ -409,6 +419,125 @@ int ser(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){   //set all register bi
 
   codeMemoryPtr[0]= 0xef;
   codeMemoryPtr[1]= ((values[0]) <<4 )+ 0x0f;
+
+  return TWO_BYTE;
+}
+
+int addRdRr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){   //add without carry
+
+  uint16_t values[2];    // values to store extraced value of Rd
+
+  getRdRr(tokenizer, values ,R0,R31);
+  encodingRdRr(values[0] , values[1] ,0x0c, codeMemoryPtr);
+
+  return TWO_BYTE;
+}
+
+int adc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){   //add with carry
+
+  uint16_t values[2];    // values to store extraced value of Rd
+
+  getRdRr(tokenizer, values ,R0,R31);
+  encodingRdRr(values[0] , values[1] ,0x1c, codeMemoryPtr);
+  return TWO_BYTE;
+}
+
+int sub(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){   //subrtact without carry
+
+  uint16_t values[1];    // values to store extraced value of Rd
+
+  getRdRr(tokenizer, values ,R0,R31);
+  encodingRdRr(values[0] , values[1] ,0x18, codeMemoryPtr);
+
+  return TWO_BYTE;
+}
+
+int sbc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){   //subtract with carry
+
+  uint16_t values[1];    // values to store extraced value of Rd
+
+  getRdRr(tokenizer, values ,R0,R31);
+  encodingRdRr(values[0] , values[1] ,0x08, codeMemoryPtr);
+
+  return TWO_BYTE;
+}
+
+int andRdRr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){  //logical AND
+
+  uint16_t values[1];    // values to store extraced value of Rd
+
+  getRdRr(tokenizer, values ,R0,R31);
+  encodingRdRr(values[0] , values[1] ,0x20, codeMemoryPtr);
+
+  return TWO_BYTE;
+}
+
+int orRdRr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //logical OR
+
+  uint16_t values[1];    // values to store extraced value of Rd
+
+  getRdRr(tokenizer, values ,R0,R31);
+  encodingRdRr(values[0] , values[1] ,0x28, codeMemoryPtr);
+
+  return TWO_BYTE;
+}
+
+int eor(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){  //exclusive or
+
+  uint16_t values[1];    // values to store extraced value of Rd
+
+  getRdRr(tokenizer, values ,R0,R31);
+  encodingRdRr(values[0] , values[1] ,0x24, codeMemoryPtr);
+
+  return TWO_BYTE;
+}
+
+int mul(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //multiply unsigned
+
+  uint16_t values[1];    // values to store extraced value of Rd
+
+  getRdRr(tokenizer, values ,R0,R31);
+  encodingRdRr(values[0] , values[1] ,0x9c, codeMemoryPtr);
+
+  return TWO_BYTE;
+}
+
+int mov(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //copy register
+
+  uint16_t values[1];    // values to store extraced value of Rd
+
+  getRdRr(tokenizer, values ,R0,R31);
+  encodingRdRr(values[0] , values[1] ,0x2c, codeMemoryPtr);
+
+  return TWO_BYTE;
+}
+
+int cpse(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //compare skip if equal
+
+  uint16_t values[1];    // values to store extraced value of Rd
+
+  getRdRr(tokenizer, values ,R0,R31);
+  encodingRdRr(values[0] , values[1] ,0x10, codeMemoryPtr);
+
+  return TWO_BYTE;
+}
+
+int cp(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ // compare
+
+  uint16_t values[1];    // values to store extraced value of Rd
+
+  getRdRr(tokenizer, values ,R0,R31);
+  encodingRdRr(values[0] , values[1] ,0x14, codeMemoryPtr);
+
+  return TWO_BYTE;
+}
+
+int cpc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //compare with carry
+
+  uint16_t values[1];    // values to store extraced value of Rd
+
+  getRdRr(tokenizer, values ,R0,R31);
+  encodingRdRr(values[0] , values[1] ,0x04, codeMemoryPtr);
 
   return TWO_BYTE;
 }

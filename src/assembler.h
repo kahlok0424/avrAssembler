@@ -52,9 +52,24 @@ int tst(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
 int ser(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
 int rol(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
 
+//instrutions with two operands (Rd , Rr)
+int addRdRr(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int adc(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int sub(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int sbc(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int andRdRr(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int orRdRr(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int eor(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int mul(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int cpse(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int cp(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int cpc(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int mov(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+
 char *convertToLowerCase(char *str);
 int assembleOneInstruction(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 void encodingRd(int Rd , uint8_t opcode1, uint8_t opcode2 , uint8_t codeMemoryPtr[]);
 void encodingNoOperand(uint8_t opcode1, uint8_t opcode2 , uint8_t codeMemoryPtr[]);
+void encodingRdRr(int Rd ,int Rr, uint8_t opcode, uint8_t codeMemoryPtr[]);
 
 #endif // _ASSEMBLER_H
