@@ -65,6 +65,11 @@ int cpse(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
 int cp(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
 int cpc(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
 int mov(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int muls(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int mulsu(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int fmul(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int fmuls(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int fmulsu(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 
 char *convertToLowerCase(char *str);
 int assembleOneInstruction(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);

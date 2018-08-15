@@ -55,7 +55,12 @@ InstructionMap instructionsMapTable[] = {
   {"cpse" , cpse},
   {"cp" , cp},
   {"cpc" , cpc},
-  {"mov" , mov},  //12
+  {"mov" , mov},
+  {"muls" , muls},
+  {"mulsu" , mulsu},
+  {"fmul" , fmul},
+  {"fmuls" , fmuls},
+  {"fmulsu" , fmulsu},  //17
 };
 
 
@@ -64,8 +69,7 @@ InstructionMap instructionsMapTable[] = {
 * ------------------------------------------------------------------------------------------------
 * REMEMBER TO USE---> git config --global --replace-all user.name "FName LName" before commit
 * all instruction should look like this --->   int add(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
-* instructions done : 34
-* remember do from muls -> fmuls
+* instructions done : 51
 * getRdRr(Tokenizer *tokenizer , uint8_t data[]);
 **/
 
@@ -538,6 +542,61 @@ int cpc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //compare with carry
 
   getRdRr(tokenizer, values ,R0,R31);
   encodingRdRr(values[0] , values[1] ,0x04, codeMemoryPtr);
+
+  return TWO_BYTE;
+}
+
+int muls(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //multiply signed
+
+  uint16_t values[1];    // values to store extraced value of operands
+
+  getRdRr(tokenizer, values ,R16,R31);
+  codeMemoryPtr[0]= 0x02;
+  codeMemoryPtr[1]= (values[0]<<4) + (values[1] -16 );
+
+  return TWO_BYTE;
+}
+
+int mulsu(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //multiply signed with unsigned
+
+  uint16_t values[1];    // values to store extraced value of operands
+
+  getRdRr(tokenizer, values ,R16,R23);
+  codeMemoryPtr[0]= 0x03;
+  codeMemoryPtr[1]= (values[0]<<4) + (values[1] -16 );
+
+  return TWO_BYTE;
+}
+
+int fmul(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //fractional multiply unsigned
+
+  uint16_t values[1];    // values to store extraced value of operands
+
+  getRdRr(tokenizer, values ,R16,R23);
+  codeMemoryPtr[0]= 0x03;
+  codeMemoryPtr[1]= (values[0]<<4) + (values[1] -16 ) + 0x08;
+
+  return TWO_BYTE;
+}
+
+int fmuls(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //fractional multiply signed
+
+  uint16_t values[1];    // values to store extraced value of operands
+
+  getRdRr(tokenizer, values ,R16,R23);
+  codeMemoryPtr[0]= 0x03;
+  codeMemoryPtr[1]= (values[0]<<4) + (values[1] -16 ) + 0x80;
+
+  return TWO_BYTE;
+}
+
+int fmulsu(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //fractional multiply signed with unsigned
+
+  uint16_t values[1];    // values to store extraced value of operands
+
+  getRdRr(tokenizer, values ,R16,R23);
+  codeMemoryPtr[0]= 0x03;
+  codeMemoryPtr[1]= (values[0]<<4) + (values[1] -16 ) + 0x88;
 
   return TWO_BYTE;
 }

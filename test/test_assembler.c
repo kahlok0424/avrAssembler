@@ -1253,6 +1253,102 @@ void test_assembler_cpc_given_R3_R4_expect_assemble_correctly(void)
 }
 }
 
+void test_assembler_muls_given_R18_R19_expect_assemble_correctly(void)
+{
+  char *line = "R18,R19";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[2];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  Try{
+  byte_number = muls(tokenizer ,codeMemoryPtr);
+  TEST_ASSERT_EQUAL_HEX16(0x2302 ,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_mulsu_given_R20_R23_expect_assemble_correctly(void)
+{
+  char *line = "R20,R23";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[2];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  Try{
+  byte_number = mulsu(tokenizer ,codeMemoryPtr);
+  TEST_ASSERT_EQUAL_HEX16(0x4703 ,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_mulsu_given_R25_R23_expect_exception_beyond_limit(void)
+{
+  char *line = "R25,R23";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[2];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  Try{
+  byte_number = mulsu(tokenizer ,codeMemoryPtr);
+  //TEST_ASSERT_EQUAL_HEX16(0x4703 ,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_fmul_given_R17_R18_expect_exception_beyond_limit(void)
+{
+  char *line = "R17,R18";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[2];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  Try{
+  byte_number = fmul(tokenizer ,codeMemoryPtr);
+  TEST_ASSERT_EQUAL_HEX16(0x1a03 ,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_fmuls_given_R18_R19_expect_exception_beyond_limit(void)
+{
+  char *line = "R18,R19";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[2];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  Try{
+  byte_number = fmuls(tokenizer ,codeMemoryPtr);
+  TEST_ASSERT_EQUAL_HEX16(0xa303 ,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
+void test_assembler_fmulsu_given_R20_R21_expect_exception_beyond_limit(void)
+{
+  char *line = "R20,R21";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[2];
+  int byte_number = 0;
+
+  tokenizer = createTokenizer(line);
+  Try{
+  byte_number = fmulsu(tokenizer ,codeMemoryPtr);
+  TEST_ASSERT_EQUAL_HEX16(0xcd03 ,*(uint16_t *)codeMemoryPtr);
+}Catch(ex){
+  dumpTokenErrorMessage(ex, 1);
+}
+}
+
 void test_getToken_given_random_line(void){
   char *line = "inc R12 +++";
   Tokenizer *tokenizer;

@@ -5,6 +5,7 @@
 #define   R0    0
 #define   R16   16
 #define   R31   31
+#define   R23   23
 
 int getRegister(Tokenizer *tokenizer, int minReg , int maxReg);
 void getNextTokenAndVerify(Tokenizer *tokenizer , char *str);
