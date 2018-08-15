@@ -86,6 +86,26 @@ void test_encodingRdRr_given_r30_r31_opcode_expect_correctly_encoded(void){
   TEST_ASSERT_EQUAL_HEX16(0xef23 ,*(uint16_t *)memoryPtr);
 }
 
+void test_encodingBranch_given_2_opcode_expect_correctly_encoded(void){
+  uint8_t opCode1 = 0xf4;
+  uint8_t opCode2 = 0x00;
+  int k = 2;
+  uint8_t memoryPtr[1];
+
+  encodingBranch(k , opCode1,opCode2 , memoryPtr );
+  TEST_ASSERT_EQUAL_HEX16(0x10f4 ,*(uint16_t *)memoryPtr);
+}
+
+void test_encodingBranch_given_negative_7_opcode_expect_correctly_encoded(void){
+  uint8_t opCode1 = 0xf4;
+  uint8_t opCode2 = 0x00;
+  int8_t k = -7;
+  uint8_t memoryPtr[2];
+
+  encodingBranch(k , opCode1,opCode2 , memoryPtr );
+  TEST_ASSERT_EQUAL_HEX16(0xc0f7 ,*(uint16_t *)memoryPtr);
+}
+
 void test_assembleOneInstruction_given_INC_R7_expect_assemble_correctly(void)
 {
   char *line = "inc R7";

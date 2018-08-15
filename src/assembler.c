@@ -70,6 +70,7 @@ InstructionMap instructionsMapTable[] = {
 * REMEMBER TO USE---> git config --global --replace-all user.name "FName LName" before commit
 * all instruction should look like this --->   int add(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 * instructions done : 51
+* movw - haven add
 * getRdRr(Tokenizer *tokenizer , uint8_t data[]);
 **/
 
@@ -113,6 +114,17 @@ void encodingRdRr(int Rd, int Rr, uint8_t opcode, uint8_t codeMemoryPtr[]){
   }
   else{
   codeMemoryPtr[1] = (Rd<<4)+ Rr;
+  }
+}
+
+void encodingBranch(int k, uint8_t opcode1, uint8_t opcode2,uint8_t codeMemoryPtr[]){
+  if(k >0){
+    codeMemoryPtr[0] = opcode1 + (k >>5);
+    codeMemoryPtr[1] = (k<<3) + opcode2;
+  }else{
+    int temp = (k) +1;
+    codeMemoryPtr[0] = opcode1 + (temp >>5);
+    codeMemoryPtr[1] = (temp<<3) + opcode2;
   }
 }
 
@@ -600,3 +612,14 @@ int fmulsu(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //fractional multipl
 
   return TWO_BYTE;
 }
+
+/*int ld(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //load indirect data
+
+  uint16_t values[1];    // values to store extraced value of operands
+
+  values[0] = getRegister(tokenizer,R0,R31);
+  codeMemoryPtr[0]= 0x03;
+  codeMemoryPtr[1]= (values[0]<<4) + (values[1] -16 ) + 0x88;
+
+  return TWO_BYTE;
+}*/

@@ -14,5 +14,6 @@
 #define ERR_EXPECTING_IDENTIFIER  109
 #define ERR_BEYOND_LIMIT          110
 #define ERR_INSTRUCTION_NOT_FOUND 111
+#define ERR_INVALID_REGISTER      112
 
 #endif // Error_H

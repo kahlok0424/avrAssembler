@@ -51,7 +51,6 @@ void getNextTokenAndVerify(Tokenizer *tokenizer , char *str){
      token = getToken(tokenizer);
      if(token->type == TOKEN_OPERATOR_TYPE){
        //token = getToken(tokenizer);
-       //printf("token str = %s" , token->str);
        throwException(ERR_INVALID_OPERATOR, token, "Expected to be not operator , but is '%s' " ,token->str );
      }else { pushBackToken(tokenizer ,token); }
     }
@@ -73,6 +72,55 @@ void getNextTokenAndVerify(Tokenizer *tokenizer , char *str){
  void getRd(Tokenizer *tokenizer, uint16_t *value , int minReg , int maxReg){
    *value = getRegister(tokenizer, minReg,maxReg);
  }
+
+ /**
+  * @param tokenizer [tokenizered operands]
+  * @param value     [to store the value behind r/R]
+  * Verify the validity of Rd and Rr
+  * If correct ,extract the value of Rd and Rd
+  * else throw an test_getRd_given_r12_expect_extract_correctly
+  */
+ void getRdRr(Tokenizer *tokenizer , uint16_t *value , int minReg , int maxReg){
+   Token *token;
+   *value = getRegister(tokenizer, minReg, maxReg);
+   getNextTokenAndVerify(tokenizer , ",");
+   *(value+1) =getRegister(tokenizer ,minReg,maxReg);
+ }
+
+ /**
+  * [getRdXYZ description]
+  * @param tokenizer [description]
+  * @param value     [description]
+  * verify the validity of Rd,x,y,z and store
+  * the respective result
+  */
+void getRdXYZ(Tokenizer *tokenizer,uint16_t *value ,int minReg,int maxReg){
+
+  *value = getRegister(tokenizer ,minReg , maxReg);
+  getNextTokenAndVerify(tokenizer ,",");
+
+}
+
+int handleXYZ(Tokenizer *tokenizer , int xyz ){
+  Token *token;
+  token = getToken(tokenizer);
+  if(token->type == TOKEN_IDENTIFIER_TYPE){
+  switch(xyz){
+    case Xaddress:
+      if(token->str == 'x' || token->str == 'X'){
+        freeToken(tokenizer);
+        token = getToken(tokenizer);
+        if(token->str == '+' ){
+          return XPlus;
+        }else { return Xaddress; }
+      } else{ throwException(ERR_INVALID_REGISTER, token, "Expected to be x register, but is '%s' " ,token->str ); }
+
+  }
+
+
+}
+}
+
 
 //Old but functional code
 /*void getRd(Tokenizer *tokenizer, uint16_t *value){
@@ -100,20 +148,6 @@ void getNextTokenAndVerify(Tokenizer *tokenizer , char *str){
   }
   freeToken(token);
 }*/
-
-/**
- * @param tokenizer [tokenizered operands]
- * @param value     [to store the value behind r/R]
- * Verify the validity of Rd and Rr
- * If correct ,extract the value of Rd and Rd
- * else throw an test_getRd_given_r12_expect_extract_correctly
- */
-void getRdRr(Tokenizer *tokenizer , uint16_t *value , int minReg , int maxReg){
-  Token *token;
-  *value = getRegister(tokenizer, minReg, maxReg);
-  getNextTokenAndVerify(tokenizer , ",");
-  *(value+1) =getRegister(tokenizer ,minReg,maxReg);
-}
 
 /*void getRdRr(Tokenizer *tokenizer , uint16_t *value){
 
