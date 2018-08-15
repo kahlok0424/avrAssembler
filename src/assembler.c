@@ -61,6 +61,26 @@ InstructionMap instructionsMapTable[] = {
   {"fmul" , fmul},
   {"fmuls" , fmuls},
   {"fmulsu" , fmulsu},  //17
+  /*{"brbc" , andRdRr},
+  {"brbs" , orRdRr},
+  {"breq" , eor},
+  {"brne" , mul},
+  {"brcs" , cpse},
+  {"brcc" , cp},
+  {"brsh" , cpc},
+  {"brlo" , mov},
+  {"brmi" , muls},
+  {"brpl" , mulsu},
+  {"brge" , fmul},
+  {"brlt" , fmuls},
+  {"brhs" , andRdRr},
+  {"brhc" , orRdRr},
+  {"brts" , eor},
+  {"brtc" , mul},
+  {"brvs" , cpse},
+  {"brvc" , cp},
+  {"brie" , cpc},
+  {"brid" , mov}, */ //20
 };
 
 
