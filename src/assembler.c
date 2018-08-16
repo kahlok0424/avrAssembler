@@ -60,7 +60,7 @@ InstructionMap instructionsMapTable[] = {
   {"mulsu" , mulsu},
   {"fmul" , fmul},
   {"fmuls" , fmuls},
-  {"fmulsu" , fmulsu},  //17
+  {"fmulsu" , fmulsu}  //17
   /*{"brbc" , andRdRr},
   {"brbs" , orRdRr},
   {"breq" , eor},
@@ -137,15 +137,11 @@ void encodingRdRr(int Rd, int Rr, uint8_t opcode, uint8_t codeMemoryPtr[]){
   }
 }
 
-void encodingBranch(int k, uint8_t opcode1, uint8_t opcode2,uint8_t codeMemoryPtr[]){
-  if(k >0){
-    codeMemoryPtr[0] = opcode1 + (k >>5);
-    codeMemoryPtr[1] = (k<<3) + opcode2;
-  }else{
-    int temp = (k) +1;
-    codeMemoryPtr[0] = opcode1 + (temp >>5);
-    codeMemoryPtr[1] = (temp<<3) + opcode2;
-  }
+void encodingBranch(uint8_t k, uint16_t opcode, uint8_t codeMemoryPtr[]){
+
+  uint16_t temp = (k-1) & 0x7f;
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
+  *ptr = opcode | (temp<<3);
 }
 
 int assembleOneInstruction(Tokenizer *tokenizer , uint8_t *codeMemoryPtr){
@@ -160,7 +156,7 @@ int assembleOneInstruction(Tokenizer *tokenizer , uint8_t *codeMemoryPtr){
   if(token->type != TOKEN_IDENTIFIER_TYPE){
     throwException(ERR_EXPECTING_IDENTIFIER, token, "Expected to be identifier , but is '%s' " ,token->str );
   }else{
-  for(int i = 0 ; i < 46; i++){
+  for(int i = 0 ; i < 51; i++){
     if( strcmp(temp, instructionsMapTable[i].name) == 0 ){
       tableNo = i;
       check =1;
@@ -177,7 +173,7 @@ int assembleOneInstruction(Tokenizer *tokenizer , uint8_t *codeMemoryPtr){
   else {
     rel = instructionsMapTable[tableNo].assemble(tokenizer , codeMemoryPtr);
   }
-  freeToken(tokenizer);
+  //freeToken(token);
   return rel;
 }
 
@@ -387,7 +383,6 @@ int lsl(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){     //logical shift lef
   uint16_t values[1];    // values to store extraced value of Rd
 
   getRd(tokenizer, values ,R0,R31);
-  //encodingRd(values[0] , 0x0c, 0x00 , codeMemoryPtr);
 
   if( (*values) >= 16 ){
     codeMemoryPtr[0]= 0x0f;
@@ -480,7 +475,7 @@ int adc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){   //add with carry
 
 int sub(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){   //subrtact without carry
 
-  uint16_t values[1];    // values to store extraced value of Rd
+  uint16_t values[2];    // values to store extraced value of Rd
 
   getRdRr(tokenizer, values ,R0,R31);
   encodingRdRr(values[0] , values[1] ,0x18, codeMemoryPtr);
@@ -490,7 +485,7 @@ int sub(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){   //subrtact without ca
 
 int sbc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){   //subtract with carry
 
-  uint16_t values[1];    // values to store extraced value of Rd
+  uint16_t values[2];    // values to store extraced value of Rd
 
   getRdRr(tokenizer, values ,R0,R31);
   encodingRdRr(values[0] , values[1] ,0x08, codeMemoryPtr);
@@ -500,7 +495,7 @@ int sbc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){   //subtract with carry
 
 int andRdRr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){  //logical AND
 
-  uint16_t values[1];    // values to store extraced value of Rd
+  uint16_t values[2];    // values to store extraced value of Rd
 
   getRdRr(tokenizer, values ,R0,R31);
   encodingRdRr(values[0] , values[1] ,0x20, codeMemoryPtr);
@@ -510,7 +505,7 @@ int andRdRr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){  //logical AND
 
 int orRdRr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //logical OR
 
-  uint16_t values[1];    // values to store extraced value of Rd
+  uint16_t values[2];    // values to store extraced value of Rd
 
   getRdRr(tokenizer, values ,R0,R31);
   encodingRdRr(values[0] , values[1] ,0x28, codeMemoryPtr);
@@ -520,7 +515,7 @@ int orRdRr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //logical OR
 
 int eor(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){  //exclusive or
 
-  uint16_t values[1];    // values to store extraced value of Rd
+  uint16_t values[2];    // values to store extraced value of Rd
 
   getRdRr(tokenizer, values ,R0,R31);
   encodingRdRr(values[0] , values[1] ,0x24, codeMemoryPtr);
@@ -530,7 +525,7 @@ int eor(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){  //exclusive or
 
 int mul(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //multiply unsigned
 
-  uint16_t values[1];    // values to store extraced value of Rd
+  uint16_t values[2];    // values to store extraced value of Rd
 
   getRdRr(tokenizer, values ,R0,R31);
   encodingRdRr(values[0] , values[1] ,0x9c, codeMemoryPtr);
@@ -540,7 +535,7 @@ int mul(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //multiply unsigned
 
 int mov(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //copy register
 
-  uint16_t values[1];    // values to store extraced value of Rd
+  uint16_t values[2];    // values to store extraced value of Rd
 
   getRdRr(tokenizer, values ,R0,R31);
   encodingRdRr(values[0] , values[1] ,0x2c, codeMemoryPtr);
@@ -550,7 +545,7 @@ int mov(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //copy register
 
 int cpse(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //compare skip if equal
 
-  uint16_t values[1];    // values to store extraced value of Rd
+  uint16_t values[2];    // values to store extraced value of Rd
 
   getRdRr(tokenizer, values ,R0,R31);
   encodingRdRr(values[0] , values[1] ,0x10, codeMemoryPtr);
@@ -560,7 +555,7 @@ int cpse(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //compare skip if equa
 
 int cp(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ // compare
 
-  uint16_t values[1];    // values to store extraced value of Rd
+  uint16_t values[2];    // values to store extraced value of Rd
 
   getRdRr(tokenizer, values ,R0,R31);
   encodingRdRr(values[0] , values[1] ,0x14, codeMemoryPtr);
@@ -570,7 +565,7 @@ int cp(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ // compare
 
 int cpc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //compare with carry
 
-  uint16_t values[1];    // values to store extraced value of Rd
+  uint16_t values[2];    // values to store extraced value of Rd
 
   getRdRr(tokenizer, values ,R0,R31);
   encodingRdRr(values[0] , values[1] ,0x04, codeMemoryPtr);
@@ -580,7 +575,7 @@ int cpc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //compare with carry
 
 int muls(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //multiply signed
 
-  uint16_t values[1];    // values to store extraced value of operands
+  uint16_t values[2];    // values to store extraced value of operands
 
   getRdRr(tokenizer, values ,R16,R31);
   codeMemoryPtr[0]= 0x02;
@@ -591,7 +586,7 @@ int muls(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //multiply signed
 
 int mulsu(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //multiply signed with unsigned
 
-  uint16_t values[1];    // values to store extraced value of operands
+  uint16_t values[2];    // values to store extraced value of operands
 
   getRdRr(tokenizer, values ,R16,R23);
   codeMemoryPtr[0]= 0x03;
@@ -602,7 +597,7 @@ int mulsu(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //multiply signed wit
 
 int fmul(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //fractional multiply unsigned
 
-  uint16_t values[1];    // values to store extraced value of operands
+  uint16_t values[2];    // values to store extraced value of operands
 
   getRdRr(tokenizer, values ,R16,R23);
   codeMemoryPtr[0]= 0x03;
@@ -613,7 +608,7 @@ int fmul(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //fractional multiply 
 
 int fmuls(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //fractional multiply signed
 
-  uint16_t values[1];    // values to store extraced value of operands
+  uint16_t values[2];    // values to store extraced value of operands
 
   getRdRr(tokenizer, values ,R16,R23);
   codeMemoryPtr[0]= 0x03;
@@ -624,7 +619,7 @@ int fmuls(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //fractional multiply
 
 int fmulsu(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //fractional multiply signed with unsigned
 
-  uint16_t values[1];    // values to store extraced value of operands
+  uint16_t values[2];    // values to store extraced value of operands
 
   getRdRr(tokenizer, values ,R16,R23);
   codeMemoryPtr[0]= 0x03;

@@ -76,6 +76,6 @@ int assembleOneInstruction(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 void encodingRd(int Rd , uint8_t opcode1, uint8_t opcode2 , uint8_t codeMemoryPtr[]);
 void encodingNoOperand(uint8_t opcode1, uint8_t opcode2 , uint8_t codeMemoryPtr[]);
 void encodingRdRr(int Rd ,int Rr, uint8_t opcode, uint8_t codeMemoryPtr[]);
-void encodingBranch(int k, uint8_t opcode1, uint8_t opcode2,uint8_t codeMemoryPtr[]);
+void encodingBranch(uint8_t k, uint16_t opcode, uint8_t codeMemoryPtr[]);
 
 #endif // _ASSEMBLER_H

@@ -17,15 +17,6 @@ void test_convertToLowerCase_given_ABC_epxect_abc(void){
   TEST_ASSERT_EQUAL_STRING("abc", convertToLowerCase(line));
 }
 
-void test_sec_expect_correct_assembler(void){
-  Token *token;
-  Tokenizer *tokenizer;
-  uint8_t codeMemoryPtr[1];
-
-  //sec(codeMemoryPtr);
-  //printf("code  la: %x \n" , codeMemoryPtr[0]  );
-}
-
 void test_encodingNoOperand_given_45_67_expect_encoded_correctly(void){
   uint8_t opCode1 = 0x45;
   uint8_t opCode2 = 0x67;
@@ -87,23 +78,29 @@ void test_encodingRdRr_given_r30_r31_opcode_expect_correctly_encoded(void){
 }
 
 void test_encodingBranch_given_2_opcode_expect_correctly_encoded(void){
-  uint8_t opCode1 = 0xf4;
-  uint8_t opCode2 = 0x00;
   int k = 2;
   uint8_t memoryPtr[1];
 
-  encodingBranch(k , opCode1,opCode2 , memoryPtr );
-  TEST_ASSERT_EQUAL_HEX16(0x10f4 ,*(uint16_t *)memoryPtr);
+  encodingBranch(k ,0xf000, memoryPtr );
+  TEST_ASSERT_EQUAL_HEX16(0xf008 ,*(uint16_t *)memoryPtr);
+}
+
+void test_encodingBranch_given_negative_50_opcode_expect_correctly_encoded(void){
+  uint16_t k = -9;
+  uint8_t memoryPtr[2];
+
+  encodingBranch(k , 0xf002, memoryPtr );
+  TEST_ASSERT_EQUAL_HEX16(0xf3b2 ,*(uint16_t *)memoryPtr);
 }
 
 void test_encodingBranch_given_negative_7_opcode_expect_correctly_encoded(void){
-  uint8_t opCode1 = 0xf4;
-  uint8_t opCode2 = 0x00;
-  int8_t k = -7;
+  uint8_t opCode1 = 0xf0;
+  uint8_t opCode2 = 0x01;
+  uint16_t k = -7;
   uint8_t memoryPtr[2];
 
-  encodingBranch(k , opCode1,opCode2 , memoryPtr );
-  TEST_ASSERT_EQUAL_HEX16(0xc0f7 ,*(uint16_t *)memoryPtr);
+  encodingBranch(k , 0xf001, memoryPtr );
+  TEST_ASSERT_EQUAL_HEX16(0xf3c1 ,*(uint16_t *)memoryPtr);
 }
 
 void test_assembleOneInstruction_given_INC_R7_expect_assemble_correctly(void)
@@ -111,7 +108,7 @@ void test_assembleOneInstruction_given_INC_R7_expect_assemble_correctly(void)
   char *line = "inc R7";
   Token *token;
   Tokenizer *tokenizer;
-  uint8_t codeMemoryPtr[1];
+  uint8_t codeMemoryPtr[2];
   int byte_number = 0;
 
   Try{
@@ -129,7 +126,7 @@ void test_assembleOneInstruction_given_DEC_r10_expect_assemble_correctly(void)
   char *line = "DEC r10";
   Token *token;
   Tokenizer *tokenizer;
-  uint8_t codeMemoryPtr[1];
+  uint8_t codeMemoryPtr[2];
   int byte_number = 0;
 
   Try{
@@ -147,7 +144,7 @@ void test_assembleOneInstruction_given_SWAP_r9_expect_assemble_correctly(void)
   char *line = "Swap r9";
   Token *token;
   Tokenizer *tokenizer;
-  uint8_t codeMemoryPtr[1];
+  uint8_t codeMemoryPtr[2];
   int byte_number = 0;
 
   Try{
@@ -165,7 +162,7 @@ void test_assembleOneInstruction_given_Rl_r31_expect_assemble_correctly(void)
   char *line = "roL r31";
   Token *token;
   Tokenizer *tokenizer;
-  uint8_t codeMemoryPtr[1];
+  uint8_t codeMemoryPtr[2];
   int byte_number = 0;
 
   Try{
@@ -183,7 +180,7 @@ void test_assembleOneInstruction_given_mov_R6_r16_expect_assemble_correctly(void
   char *line = "mov r6,r16";
   Token *token;
   Tokenizer *tokenizer;
-  uint8_t codeMemoryPtr[1];
+  uint8_t codeMemoryPtr[2];
   int byte_number = 0;
 
   Try{

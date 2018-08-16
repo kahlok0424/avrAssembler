@@ -94,7 +94,7 @@ void getNextTokenAndVerify(Tokenizer *tokenizer , char *str){
   * verify the validity of Rd,x,y,z and store
   * the respective result
   */
-void getRdXYZ(Tokenizer *tokenizer,uint16_t *value ,int minReg,int maxReg){
+/*void getRdXYZ(Tokenizer *tokenizer,uint16_t *value ,int minReg,int maxReg){
 
   *value = getRegister(tokenizer ,minReg , maxReg);
   getNextTokenAndVerify(tokenizer ,",");
@@ -120,7 +120,7 @@ int handleXYZ(Tokenizer *tokenizer , int xyz ){
 
 }
 }
-
+*/
 
 //Old but functional code
 /*void getRd(Tokenizer *tokenizer, uint16_t *value){
