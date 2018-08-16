@@ -1766,6 +1766,37 @@ void test_assembleOneStruction_brid_given_pc_negative_7_expect_assemble_correctl
   }
 }
 
+void test_assembleOneStruction_rjmp_pc_550_expect_assemble_correctly(void)
+{
+  char *line = "rjmp pc+550";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[2];
+  int byte_number = 0;
+
+  Try{
+    tokenizer = createTokenizer(line);
+    byte_number = assembleOneInstruction(tokenizer ,codeMemoryPtr);
+    TEST_ASSERT_EQUAL_HEX16(0xc225 ,*(uint16_t *)codeMemoryPtr);
+  }Catch(ex){
+    dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_assembleOneStruction_rjmp_pc_negative_3550_expect_assemble_correctly(void)
+{
+  char *line = "rjmp pc-3550";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[2];
+  int byte_number = 0;
+
+  Try{
+    tokenizer = createTokenizer(line);
+    byte_number = assembleOneInstruction(tokenizer ,codeMemoryPtr);
+  }Catch(ex){
+    dumpTokenErrorMessage(ex, 1);
+  }
+}
+
 void test_getToken_given_random_line(void){
   char *line = "inc R12 pc- +++";
   Tokenizer *tokenizer;

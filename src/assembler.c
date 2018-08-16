@@ -49,7 +49,7 @@ InstructionMap instructionsMapTable[] = {
   {"clr" , clr},
   {"tst" , tst},
   {"ser" , ser},
-  {"rol" , rol},  //14
+  {"rol" , rol},  //40
   {"add" , addRdRr},  // RdRr operand
   {"adc" , adc},
   {"sub" , sub},
@@ -66,7 +66,7 @@ InstructionMap instructionsMapTable[] = {
   {"mulsu" , mulsu},
   {"fmul" , fmul},
   {"fmuls" , fmuls},
-  {"fmulsu" , fmulsu},  //17
+  {"fmulsu" , fmulsu},  //57
   {"breq" , breq},
   {"brne" , brne},
   {"brcs" , brcs},
@@ -84,7 +84,9 @@ InstructionMap instructionsMapTable[] = {
   {"brvs" , brvs},
   {"brvc" , brvc},
   {"brie" , brie},
-  {"brid" , brid},  //18
+  {"brid" , brid},
+  {"rjmp" , rjmp},
+  {"rcall" , rcall}, //77
 };
 
 
@@ -160,7 +162,7 @@ int assembleOneInstruction(Tokenizer *tokenizer , uint8_t *codeMemoryPtr){
   if(token->type != TOKEN_IDENTIFIER_TYPE){
     throwException(ERR_EXPECTING_IDENTIFIER, token, "Expected to be identifier , but is '%s' " ,token->str );
   }else{
-  for(int i = 0 ; i < 75; i++){
+  for(int i = 0 ; i < 77; i++){
     if( strcmp(temp, instructionsMapTable[i].name) == 0 ){
       tableNo = i;
       check =1;
@@ -672,7 +674,7 @@ int breq(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if equal
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf001,codeMemoryPtr);
 
   return TWO_BYTE;
@@ -682,7 +684,7 @@ int brne(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if not equal
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf401,codeMemoryPtr);
 
   return TWO_BYTE;
@@ -692,7 +694,7 @@ int brcs(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if carry set
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf000,codeMemoryPtr);
 
   return TWO_BYTE;
@@ -702,7 +704,7 @@ int brcc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if carry clea
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf400,codeMemoryPtr);
 
   return TWO_BYTE;
@@ -712,7 +714,7 @@ int brsh(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if carry set
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf400,codeMemoryPtr);
 
   return TWO_BYTE;
@@ -722,7 +724,7 @@ int brlo(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if lower
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf000,codeMemoryPtr);
 
   return TWO_BYTE;
@@ -732,7 +734,7 @@ int brmi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if minus
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf002,codeMemoryPtr);
 
   return TWO_BYTE;
@@ -742,7 +744,7 @@ int brpl(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if plus
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf402,codeMemoryPtr);
 
   return TWO_BYTE;
@@ -751,7 +753,7 @@ int brge(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if greater
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf404,codeMemoryPtr);
 
   return TWO_BYTE;
@@ -761,7 +763,7 @@ int brlt(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if carry set
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf004,codeMemoryPtr);
 
   return TWO_BYTE;
@@ -771,7 +773,7 @@ int brhs(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if half carry
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf005,codeMemoryPtr);
 
   return TWO_BYTE;
@@ -781,7 +783,7 @@ int brhc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if half carry
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf405,codeMemoryPtr);
 
   return TWO_BYTE;
@@ -791,7 +793,7 @@ int brts(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if T is set
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf006,codeMemoryPtr);
 
   return TWO_BYTE;
@@ -801,7 +803,7 @@ int brtc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if T cleared
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf406,codeMemoryPtr);
 
   return TWO_BYTE;
@@ -811,7 +813,7 @@ int brvs(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if overflow s
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf003,codeMemoryPtr);
 
   return TWO_BYTE;
@@ -821,7 +823,7 @@ int brvc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if overflow s
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf403,codeMemoryPtr);
 
   return TWO_BYTE;
@@ -831,7 +833,7 @@ int brie(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if global int
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf007,codeMemoryPtr);
 
   return TWO_BYTE;
@@ -841,8 +843,34 @@ int brid(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //branch if global int
 
   uint16_t values[2];    // values to store extraced value of operands
 
-  getK(tokenizer, values);
+  getK(tokenizer, values , -64 , 63);
   encodingBranch(values[0] , 0xf407,codeMemoryPtr);
+
+  return TWO_BYTE;
+}
+
+int rjmp(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //brelative jump
+
+  uint16_t values[2];    // values to store extraced value of operands
+
+    getK(tokenizer, values , -2000 , 2000);
+    uint16_t temp = (values[0]-1) & 0x0fff;
+
+    uint16_t *ptr = (uint16_t *)codeMemoryPtr;
+    *ptr =  0xc000 | (temp);
+
+  return TWO_BYTE;
+}
+
+int rcall(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //relative call to subroutine
+
+  uint16_t values[2];    // values to store extraced value of operands
+
+    getK(tokenizer, values , -2000 , 2000);
+    uint16_t temp = (values[0]-1) & 0x0fff;
+
+    uint16_t *ptr = (uint16_t *)codeMemoryPtr;
+    *ptr =  0xd000 | (temp);
 
   return TWO_BYTE;
 }

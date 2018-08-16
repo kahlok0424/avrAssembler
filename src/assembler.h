@@ -96,6 +96,8 @@ int brvs(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int brvc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int brie(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int brid(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int rjmp(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int rcall(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 
 
 char *convertToLowerCase(char *str);

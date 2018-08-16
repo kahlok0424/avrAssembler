@@ -160,16 +160,47 @@ int VerifyToken(Tokenizer *tokenizer , char *str){
         }
 }*/
 
-uint16_t getConstant(Tokenizer *tokenizer ){
-  Token *token;
+uint16_t getConstant(Tokenizer *tokenizer, int min , int max ){
+  IntegerToken *token;
   token = getToken(tokenizer);
-  token = getToken(tokenizer);
-  if(token->str == "-"){
-
+  if(token->type == TOKEN_INTEGER_TYPE){
+    if( token->value > max || token->value < min){
+      throwException(ERR_BEYOND_LIMIT, token, " '%d' beyond the limit of %d < k < %d " ,token->value,min,max );
+    }else {  return token->value; }
+  }else{
+    throwException(ERR_INVALID_INTEGER, token, "Expect integer but the token is '%s' " , token->str);
   }
 }
 
-void getK(Tokenizer *tokenizer,uint16_t *values){
+void getK(Tokenizer *tokenizer,uint16_t *values, int min , int max){
+
+  Token *token;
+  char *temp;
+  char PositiveNeg;
+  token = getToken(tokenizer);
+  temp = convertToLowerCase1(token->str);
+
+  if( !strcmp(temp, "pc")){
+    freeToken(token);
+    token = getToken(tokenizer);
+    PositiveNeg = *(token ->str);
+      if( PositiveNeg == '-'){
+          *values = (getConstant(tokenizer , min,max)) * -1;
+      }
+      else if( PositiveNeg == '+'){
+          *values = getConstant(tokenizer,min ,max) ;
+      }
+      else {
+        throwException(ERR_INVALID_OPERATOR,"Expecting + / - but is %s ",token->str);
+      }
+      freeToken(token);
+    }
+        else{
+         throwException(ERR_EXPECTING_INTEGER, token, "Expect 'PC' but is %s ",token->str);
+        }
+}
+
+/*void getK(Tokenizer *tokenizer,uint16_t *values){
 
   Token *token;
   char *temp;
@@ -197,11 +228,11 @@ void getK(Tokenizer *tokenizer,uint16_t *values){
       /*if( *values > max || *values < min){
         throwException(ERR_BEYOND_LIMIT, token, " '%d' beyond the limit of %d < d < %d " , (*values) ,min,max );
       }else{ }*/
-    }
+  /*  }
         else{
          throwException(ERR_EXPECTING_INTEGER, token, "Expect 'PC' but is %s ",token->str);
         }
-}
+}*/
 
 void handleXYZ(Tokenizer *tokenizer){
 
@@ -219,9 +250,9 @@ void handleXYZ(Tokenizer *tokenizer){
   *value = getRegister(tokenizer ,minReg , maxReg);
   getNextTokenAndVerify(tokenizer ,",");
 
-}
+}*/
 
-int handleXYZ(Tokenizer *tokenizer , int xyz ){
+/*int handleXYZ(Tokenizer *tokenizer , int xyz ){
   Token *token;
   token = getToken(tokenizer);
   if(token->type == TOKEN_IDENTIFIER_TYPE){
@@ -237,10 +268,9 @@ int handleXYZ(Tokenizer *tokenizer , int xyz ){
 
   }
 
+}
+}*/
 
-}
-}
-*/
 
 //Old but functional code
 /*void getRd(Tokenizer *tokenizer, uint16_t *value){

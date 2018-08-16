@@ -25,6 +25,7 @@ int VerifyToken(Tokenizer *tokenizer , char *str);
 void getRd(Tokenizer *tokenizer , uint16_t *values , int minReg ,int maxReg);    //example inc Rd
 void getRdRr(Tokenizer *tokenizer , uint16_t *value ,  int minReg , int maxReg);   //example add Rd ,rr
 //uint16_t getK(Tokenizer *tokenizer,int min , int max );
-void getK(Tokenizer *tokenizer,uint16_t *values );
+uint16_t getConstant(Tokenizer *tokenizer, int min , int max );
+void getK(Tokenizer *tokenizer,uint16_t *values ,int min ,int max );
 
 #endif // _GETOPERAND_H

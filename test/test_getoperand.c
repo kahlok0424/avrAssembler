@@ -525,7 +525,7 @@ uint16_t pc[2];
   Try {
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
-  getK(tokenizer,pc );
+  getK(tokenizer,pc ,0 , 127);
   TEST_ASSERT_EQUAL(5 ,pc[0] );
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
@@ -540,7 +540,7 @@ void test_getK_given_negative_20_expect_correct(void)
   Try {
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
-  getK(tokenizer,pc);
+  getK(tokenizer,pc ,0 ,127);
   TEST_ASSERT_EQUAL(65516,pc[0] );
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
@@ -555,7 +555,7 @@ void test_getK_given_negative_100_expect_exception_thrown(void)
   Try {
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
- getK(tokenizer,pc);
+  getK(tokenizer,pc , -64 ,63);
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
   }
@@ -569,9 +569,49 @@ void test_getK_given_plus_expect_exception_thrown(void)
   Try {
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
-  getK(tokenizer,pc);
+  getK(tokenizer,pc,0,2000);
   //TEST_ASSERT_EQUAL(5 ,pc );
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getK_given_plus_expect_exception_beyond_limit_thrown(void)
+{
+  char *operands = "pc+3000";
+  uint16_t pc[2];
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+  getK(tokenizer,pc ,0,2000);
+  //TEST_ASSERT_EQUAL(5 ,pc );
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getConstant_given_1500_expect_1500(void){
+  char *line = "1500";
+  Tokenizer *tokenizer;
+
+  Try{
+    tokenizer = createTokenizer(line);
+    uint16_t result = getConstant(tokenizer , 0 ,2000);
+    TEST_ASSERT_EQUAL(1500,result);
+  }Catch(ex){
+    dumpTokenErrorMessage(ex,1);
+  }
+}
+
+void test_getConstant_given_2200_expect_exception_beyond_limit(void){
+  char *line = "2200";
+  Tokenizer *tokenizer;
+
+  Try{
+    tokenizer = createTokenizer(line);
+    uint16_t result = getConstant(tokenizer , 0 ,2000);
+  }Catch(ex){
+    dumpTokenErrorMessage(ex,1);
   }
 }
