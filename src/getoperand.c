@@ -1,11 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
 #include "getoperand.h"
+#include "assembler.h"
 #include "Tokenizer.h"
 #include "Exception.h"
 #include "Token.h"
 #include "Error.h"
+
+char *convertToLowerCase1(char *str)
+{
+  int i = 0;
+  char *buffer;
+  buffer = (char*)malloc(strlen(str)+1);
+  strcpy(buffer,str);
+  //convert the word to lowercase 1 by 1
+  while(buffer[i] != '\0')
+  {
+   buffer[i] = tolower(buffer[i]);
+    ++i;
+  }
+    return buffer;
+}
 
 /**
 * @param tokenizer [tokenizered operands]
@@ -62,6 +79,19 @@ void getNextTokenAndVerify(Tokenizer *tokenizer , char *str){
   }
 }
 
+int VerifyToken(Tokenizer *tokenizer , char *str){
+  Token *token;
+  token = getToken(tokenizer);
+    if(*(token->str) == (*str) ){
+     freeToken(token);   //free the token when finish used
+     return 1;
+    }
+     else{
+       pushBackToken(tokenizer,token);
+       return 0;
+    }
+}
+
 /**
  * @param tokenizer [tokenizered operands]
  * @param values    [to store the value behind r/R]
@@ -87,33 +117,93 @@ void getNextTokenAndVerify(Tokenizer *tokenizer , char *str){
    *(value+1) =getRegister(tokenizer ,minReg,maxReg);
  }
 
-uint16_t getK(Tokenizer *tokenizer,int min , int max ){
+/*void getK(Tokenizer *tokenizer,uint16_t *values ,int min , int max ){
 
-  IntegerToken *token;
-  int k = 0;
+  Token *token;
+  char *temp;
+  int negPos = 0;
   token = getToken(tokenizer);
-  if(token->type == TOKEN_OPERATOR_TYPE){
-    getNextTokenAndVerify(tokenizer,'-');
+  temp = convertToLowerCase1(token->str);
+
+  if( !strcmp(temp, "pc")){
+    freeToken(token);
     token = getToken(tokenizer);
-    if(token->type == TOKEN_INTEGER_TYPE){
-      k = (token->value) * -1;
-      if(k> max || k < min){
-        throwException(ERR_BEYOND_LIMIT, token, " '%d' beyond the limit of %d < d < %d " ,token->value,min,max );
+      if( token->str == "-"){
+        negPos =1;
+      }
+      else if( token->str == "+"){
+        negPos =0;
+      }
+      else {
+        //throwException(ERR_INVALID_OPERATOR,"Expecting + / - but is %s ",token->str);
+      }
+      printf("values = %d \n" ,negPos);
+      printf("str = %s \n" , token->str);
+      freeToken(token);
+      token = getToken(tokenizer);
+      if(token->type == TOKEN_INTEGER_TYPE){
+        *values =((IntegerToken *)token)->value;
       }else{
-      return k;  }
-    }else{
-      throwException(ERR_EXPECTING_INTEGER, token, "The element is not integer/label");
+      throwException(ERR_EXPECTING_INTEGER, token, "The element is not integer");
     }
-  }else if(token->type = TOKEN_INTEGER_TYPE){
-    k = token->value;
-    if(k> max || k < min){
-      throwException(ERR_BEYOND_LIMIT, token, " '%d' beyond the limit of %d < d < %d " ,token->value,min,max );
-    }else{
-    return k;  }
+      if(negPos ==1){
+      *values = (*values) * -1; }
+      else{
+      *values = *values ; }
+      freeToken(token);
+      if( *values > max || *values < min){
+        throwException(ERR_BEYOND_LIMIT, token, " '%d' beyond the limit of %d < d < %d " , (*values) ,min,max );
+      }else{ }
+        }
+        else{
+         throwException(ERR_EXPECTING_INTEGER, token, "Expect 'PC' but is %s ",token->str);
+        }
+}*/
+
+uint16_t getConstant(Tokenizer *tokenizer ){
+  Token *token;
+  token = getToken(tokenizer);
+  token = getToken(tokenizer);
+  if(token->str == "-"){
+
   }
-  else{
-    throwException(ERR_EXPECTING_INTEGER, token, "The element is not integer/label");
-  }
+}
+
+void getK(Tokenizer *tokenizer,uint16_t *values){
+
+  Token *token;
+  char *temp;
+  char PositiveNeg;
+  int negPos = 0;
+  token = getToken(tokenizer);
+  temp = convertToLowerCase1(token->str);
+
+  if( !strcmp(temp, "pc")){
+    freeToken(token);
+    token = getToken(tokenizer);
+    PositiveNeg = *(token ->str);
+    freeToken(token);
+    token = getToken(tokenizer);
+      if( PositiveNeg == '-'){
+          *values = (((IntegerToken *)token)->value )* -1;
+      }
+      else if( PositiveNeg == '+'){
+          *values = (((IntegerToken *)token)->value);
+      }
+      else {
+        //throwException(ERR_INVALID_OPERATOR,"Expecting + / - but is %s ",token->str);
+      }
+      freeToken(token);
+      /*if( *values > max || *values < min){
+        throwException(ERR_BEYOND_LIMIT, token, " '%d' beyond the limit of %d < d < %d " , (*values) ,min,max );
+      }else{ }*/
+    }
+        else{
+         throwException(ERR_EXPECTING_INTEGER, token, "Expect 'PC' but is %s ",token->str);
+        }
+}
+
+void handleXYZ(Tokenizer *tokenizer){
 
 }
 

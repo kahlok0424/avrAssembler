@@ -33,6 +33,12 @@ int seh(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
 int clh(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
 int nop(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
 int sleep(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int ijmp(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int eijmp(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int icall(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int eicall(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int ret(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
+int reti(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
 int wdr(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
 int breakAVR(Tokenizer *tokenizer, uint8_t codeMemoryPtr[]);
 
@@ -70,6 +76,27 @@ int mulsu(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int fmul(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int fmuls(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int fmulsu(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+
+//branch instructions
+int breq(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brne(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brcs(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brcc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brsh(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brlo(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brmi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brpl(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brge(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brlt(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brhs(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brhc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brts(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brtc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brvs(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brvc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brie(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brid(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+
 
 char *convertToLowerCase(char *str);
 int assembleOneInstruction(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);

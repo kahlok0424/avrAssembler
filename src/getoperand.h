@@ -18,10 +18,13 @@
 #define   ZMinus        209
 #define   XYZ           210
 
+char *convertToLowerCase1(char *str);
 int getRegister(Tokenizer *tokenizer, int minReg , int maxReg);
 void getNextTokenAndVerify(Tokenizer *tokenizer , char *str);
+int VerifyToken(Tokenizer *tokenizer , char *str);
 void getRd(Tokenizer *tokenizer , uint16_t *values , int minReg ,int maxReg);    //example inc Rd
 void getRdRr(Tokenizer *tokenizer , uint16_t *value ,  int minReg , int maxReg);   //example add Rd ,rr
-uint16_t getK(Tokenizer *tokenizer,int min , int max );
+//uint16_t getK(Tokenizer *tokenizer,int min , int max );
+void getK(Tokenizer *tokenizer,uint16_t *values );
 
 #endif // _GETOPERAND_H

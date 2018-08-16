@@ -519,29 +519,29 @@ void test_getRdRr_given_r1_A_r2_expect_exception_expecting_operator(void)
 
 void test_getK_given_5_expect_encoded_correctly(void)
 {
-  char *operands = "5";
-  uint16_t pc;
+  char *operands = "pc+5";
+uint16_t pc[2];
 
   Try {
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
-  pc = getK(tokenizer,-64 ,64);
-  TEST_ASSERT_EQUAL(5 ,pc );
+  getK(tokenizer,pc );
+  TEST_ASSERT_EQUAL(5 ,pc[0] );
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
   }
 }
 
-void test_getK_given_negative_20_expect_exception_thrown(void)
+void test_getK_given_negative_20_expect_correct(void)
 {
-  char *operands = "-20";
-  uint16_t pc;
+  char *operands = "pc-20";
+  uint16_t pc[2];
 
   Try {
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
-  pc = getK(tokenizer,-64 ,64);
-  TEST_ASSERT_EQUAL(-20 ,pc );
+  getK(tokenizer,pc);
+  TEST_ASSERT_EQUAL(65516,pc[0] );
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
   }
@@ -549,13 +549,27 @@ void test_getK_given_negative_20_expect_exception_thrown(void)
 
 void test_getK_given_negative_100_expect_exception_thrown(void)
 {
-  char *operands = "-100";
-  uint16_t pc;
+  char *operands = "pc-100";
+  uint16_t pc[2];
 
   Try {
   Tokenizer *tokenizer = NULL;
   tokenizer = createTokenizer(operands);
-  pc = getK(tokenizer,-64 ,64);
+ getK(tokenizer,pc);
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getK_given_plus_expect_exception_thrown(void)
+{
+  char *operands = "+";
+  uint16_t pc[2];
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+  getK(tokenizer,pc);
   //TEST_ASSERT_EQUAL(5 ,pc );
   }Catch(ex) {
   dumpTokenErrorMessage(ex, 1);
