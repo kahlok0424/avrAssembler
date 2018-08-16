@@ -516,3 +516,48 @@ void test_getRdRr_given_r1_A_r2_expect_exception_expecting_operator(void)
   dumpTokenErrorMessage(ex, 1);
   }
 }
+
+void test_getK_given_5_expect_encoded_correctly(void)
+{
+  char *operands = "5";
+  uint16_t pc;
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+  pc = getK(tokenizer,-64 ,64);
+  TEST_ASSERT_EQUAL(5 ,pc );
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getK_given_negative_20_expect_exception_thrown(void)
+{
+  char *operands = "-20";
+  uint16_t pc;
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+  pc = getK(tokenizer,-64 ,64);
+  TEST_ASSERT_EQUAL(-20 ,pc );
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getK_given_negative_100_expect_exception_thrown(void)
+{
+  char *operands = "-100";
+  uint16_t pc;
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+  pc = getK(tokenizer,-64 ,64);
+  //TEST_ASSERT_EQUAL(5 ,pc );
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
+}

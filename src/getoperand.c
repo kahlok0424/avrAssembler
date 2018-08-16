@@ -87,6 +87,36 @@ void getNextTokenAndVerify(Tokenizer *tokenizer , char *str){
    *(value+1) =getRegister(tokenizer ,minReg,maxReg);
  }
 
+uint16_t getK(Tokenizer *tokenizer,int min , int max ){
+
+  IntegerToken *token;
+  int k = 0;
+  token = getToken(tokenizer);
+  if(token->type == TOKEN_OPERATOR_TYPE){
+    getNextTokenAndVerify(tokenizer,'-');
+    token = getToken(tokenizer);
+    if(token->type == TOKEN_INTEGER_TYPE){
+      k = (token->value) * -1;
+      if(k> max || k < min){
+        throwException(ERR_BEYOND_LIMIT, token, " '%d' beyond the limit of %d < d < %d " ,token->value,min,max );
+      }else{
+      return k;  }
+    }else{
+      throwException(ERR_EXPECTING_INTEGER, token, "The element is not integer/label");
+    }
+  }else if(token->type = TOKEN_INTEGER_TYPE){
+    k = token->value;
+    if(k> max || k < min){
+      throwException(ERR_BEYOND_LIMIT, token, " '%d' beyond the limit of %d < d < %d " ,token->value,min,max );
+    }else{
+    return k;  }
+  }
+  else{
+    throwException(ERR_EXPECTING_INTEGER, token, "The element is not integer/label");
+  }
+
+}
+
  /**
   * [getRdXYZ description]
   * @param tokenizer [description]
