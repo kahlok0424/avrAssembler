@@ -99,6 +99,15 @@ int brid(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int rjmp(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int rcall(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 
+//instructions with Rd,K8 operands
+int andi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int ori(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int subi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int sbci(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int ldi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int cbr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int sbr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int cpi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 
 char *convertToLowerCase(char *str);
 int assembleOneInstruction(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
@@ -106,5 +115,6 @@ void encodingRd(int Rd , uint8_t opcode1, uint8_t opcode2 , uint8_t codeMemoryPt
 void encodingNoOperand(uint8_t opcode1, uint8_t opcode2 , uint8_t codeMemoryPtr[]);
 void encodingRdRr(int Rd ,int Rr, uint8_t opcode, uint8_t codeMemoryPtr[]);
 void encodingBranch(uint8_t k, uint16_t opcode, uint8_t codeMemoryPtr[]);
+void encodingRdK8(uint8_t Rd , uint16_t K, uint16_t opCode, uint8_t codeMemoryPtr[]);
 
 #endif // _ASSEMBLER_H

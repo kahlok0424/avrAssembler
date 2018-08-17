@@ -117,48 +117,12 @@ int VerifyToken(Tokenizer *tokenizer , char *str){
    *(value+1) =getRegister(tokenizer ,minReg,maxReg);
  }
 
-/*void getK(Tokenizer *tokenizer,uint16_t *values ,int min , int max ){
-
+void getRdK8(Tokenizer *tokenizer ,uint16_t *value , int minMax[]){
   Token *token;
-  char *temp;
-  int negPos = 0;
-  token = getToken(tokenizer);
-  temp = convertToLowerCase1(token->str);
-
-  if( !strcmp(temp, "pc")){
-    freeToken(token);
-    token = getToken(tokenizer);
-      if( token->str == "-"){
-        negPos =1;
-      }
-      else if( token->str == "+"){
-        negPos =0;
-      }
-      else {
-        //throwException(ERR_INVALID_OPERATOR,"Expecting + / - but is %s ",token->str);
-      }
-      printf("values = %d \n" ,negPos);
-      printf("str = %s \n" , token->str);
-      freeToken(token);
-      token = getToken(tokenizer);
-      if(token->type == TOKEN_INTEGER_TYPE){
-        *values =((IntegerToken *)token)->value;
-      }else{
-      throwException(ERR_EXPECTING_INTEGER, token, "The element is not integer");
-    }
-      if(negPos ==1){
-      *values = (*values) * -1; }
-      else{
-      *values = *values ; }
-      freeToken(token);
-      if( *values > max || *values < min){
-        throwException(ERR_BEYOND_LIMIT, token, " '%d' beyond the limit of %d < d < %d " , (*values) ,min,max );
-      }else{ }
-        }
-        else{
-         throwException(ERR_EXPECTING_INTEGER, token, "Expect 'PC' but is %s ",token->str);
-        }
-}*/
+  *value = getRegister(tokenizer, minMax[0], minMax[1]);
+  getNextTokenAndVerify(tokenizer , ",");
+  *(value+1) = getConstant(tokenizer ,minMax[2] , minMax[3]);
+}
 
 uint16_t getConstant(Tokenizer *tokenizer, int min , int max ){
   IntegerToken *token;

@@ -87,6 +87,14 @@ InstructionMap instructionsMapTable[] = {
   {"brid" , brid},
   {"rjmp" , rjmp},
   {"rcall" , rcall}, //77
+  {"andi" , brvc},
+  {"ori" , brie},
+  {"subi" , brid},
+  {"sbci" , rjmp},
+  {"ldi" , brvc},
+  {"cbr" , brie},
+  {"sbr" , brid},
+  {"cpi" , rjmp},  //85
 };
 
 
@@ -150,6 +158,12 @@ void encodingBranch(uint8_t k, uint16_t opcode, uint8_t codeMemoryPtr[]){
   *ptr = opcode | (temp<<3);
 }
 
+void encodingRdK8(uint8_t Rd , uint16_t K, uint16_t opCode, uint8_t codeMemoryPtr[]){
+  uint16_t temp = (K & 0x00f0);
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
+  *ptr = opCode | (temp << 4 ) | (Rd-16)<<4 | (K&0x000f);
+}
+
 int assembleOneInstruction(Tokenizer *tokenizer , uint8_t *codeMemoryPtr){
 
   Token *token;
@@ -162,7 +176,7 @@ int assembleOneInstruction(Tokenizer *tokenizer , uint8_t *codeMemoryPtr){
   if(token->type != TOKEN_IDENTIFIER_TYPE){
     throwException(ERR_EXPECTING_IDENTIFIER, token, "Expected to be identifier , but is '%s' " ,token->str );
   }else{
-  for(int i = 0 ; i < 77; i++){
+  for(int i = 0 ; i < 85; i++){
     if( strcmp(temp, instructionsMapTable[i].name) == 0 ){
       tableNo = i;
       check =1;
@@ -873,6 +887,94 @@ int rcall(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //relative call to su
     *ptr =  0xd000 | (temp);
 
   return TWO_BYTE;
+}
+
+int andi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //logical and with immediated
+
+  uint16_t values[2];    // values to store extraced value of operands
+  int minMax[4] = {16,31,0,255};
+
+    getRdK8(tokenizer, values , minMax );
+    encodingRdK8(values[0] , values[1] , 0x7000,codeMemoryPtr);
+
+    return TWO_BYTE;
+}
+
+int ori(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //logical or with immediated
+
+  uint16_t values[2];    // values to store extraced value of operands
+  int minMax[4] = {16,31,0,255};
+
+    getRdK8(tokenizer, values , minMax );
+    encodingRdK8(values[0] , values[1] , 0x6000,codeMemoryPtr);
+
+    return TWO_BYTE;
+}
+
+int subi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //subtract with immediated
+
+  uint16_t values[2];    // values to store extraced value of operands
+  int minMax[4] = {16,31,0,255};
+
+    getRdK8(tokenizer, values , minMax );
+    encodingRdK8(values[0] , values[1] , 0x5000,codeMemoryPtr);
+
+    return TWO_BYTE;
+}
+
+int sbci(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //subtract immediated with carry
+
+  uint16_t values[2];    // values to store extraced value of operands
+  int minMax[4] = {16,31,0,255};
+
+    getRdK8(tokenizer, values , minMax );
+    encodingRdK8(values[0] , values[1] , 0x4000,codeMemoryPtr);
+
+    return TWO_BYTE;
+}
+
+int ldi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //load immediated
+
+  uint16_t values[2];    // values to store extraced value of operands
+  int minMax[4] = {16,31,0,255};
+
+    getRdK8(tokenizer, values , minMax );
+    encodingRdK8(values[0] , values[1] , 0xe000,codeMemoryPtr);
+
+    return TWO_BYTE;
+}
+
+int cbr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //clear bits in register
+
+  uint16_t values[2];    // values to store extraced value of operands
+  int minMax[4] = {16,31,0,255};
+
+    getRdK8(tokenizer, values , minMax );
+    encodingRdK8(values[0] , ~values[1] , 0x7000,codeMemoryPtr);
+
+    return TWO_BYTE;
+}
+
+int sbr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //set bits with register
+
+  uint16_t values[2];    // values to store extraced value of operands
+  int minMax[4] = {16,31,0,255};
+
+    getRdK8(tokenizer, values , minMax );
+    encodingRdK8(values[0] , values[1] , 0x6000,codeMemoryPtr);
+
+    return TWO_BYTE;
+}
+
+int cpi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //compare with immediate
+
+  uint16_t values[2];    // values to store extraced value of operands
+  int minMax[4] = {16,31,0,255};
+
+    getRdK8(tokenizer, values , minMax );
+    encodingRdK8(values[0] , values[1] , 0x3000,codeMemoryPtr);
+
+    return TWO_BYTE;
 }
 
 /*int ld(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //load indirect data

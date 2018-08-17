@@ -517,6 +517,56 @@ void test_getRdRr_given_r1_A_r2_expect_exception_expecting_operator(void)
   }
 }
 
+void test_getRdK8_given_r81_88_expect_value_extracted_correctly(void)
+{
+  char *operands = "r18,88";
+  uint16_t values[2];
+  int minMax[4] = {16,31,0,255};
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+
+  getRdK8(tokenizer, values ,minMax);
+  TEST_ASSERT_EQUAL(18,values[0]);
+  TEST_ASSERT_EQUAL(88,values[1]);
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getRdK8_given_r8_88_expect_exception_r8_beyond_limit(void)
+{
+  char *operands = "r8,88";
+  uint16_t values[2];
+  int minMax[4] = {16,31,0,255};
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+
+  getRdK8(tokenizer, values ,minMax);
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_getRdK8_given_r18_888_expect_exception_888_beyond_limit(void)
+{
+  char *operands = "r18,888";
+  uint16_t values[2];
+  int minMax[4] = {16,31,0,255};
+
+  Try {
+  Tokenizer *tokenizer = NULL;
+  tokenizer = createTokenizer(operands);
+
+  getRdK8(tokenizer, values ,minMax);
+  }Catch(ex) {
+  dumpTokenErrorMessage(ex, 1);
+  }
+}
+
 void test_getK_given_5_expect_encoded_correctly(void)
 {
   char *operands = "pc+5";
