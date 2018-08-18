@@ -87,14 +87,15 @@ InstructionMap instructionsMapTable[] = {
   {"brid" , brid},
   {"rjmp" , rjmp},
   {"rcall" , rcall}, //77
-  {"andi" , brvc},
-  {"ori" , brie},
-  {"subi" , brid},
-  {"sbci" , rjmp},
-  {"ldi" , brvc},
-  {"cbr" , brie},
-  {"sbr" , brid},
-  {"cpi" , rjmp},  //85
+  {"andi" , andi},
+  {"ori" , ori},
+  {"subi" , subi},
+  {"sbci" , sbci},
+  {"ldi" , ldi},
+  {"cbr" , cbr},
+  {"sbr" , sbr},
+  {"cpi" , cpi},
+  {"adiw" , adiw}, //86
 };
 
 
@@ -176,7 +177,7 @@ int assembleOneInstruction(Tokenizer *tokenizer , uint8_t *codeMemoryPtr){
   if(token->type != TOKEN_IDENTIFIER_TYPE){
     throwException(ERR_EXPECTING_IDENTIFIER, token, "Expected to be identifier , but is '%s' " ,token->str );
   }else{
-  for(int i = 0 ; i < 85; i++){
+  for(int i = 0 ; i < 86; i++){
     if( strcmp(temp, instructionsMapTable[i].name) == 0 ){
       tableNo = i;
       check =1;
@@ -973,6 +974,25 @@ int cpi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //compare with immediat
 
     getRdK8(tokenizer, values , minMax );
     encodingRdK8(values[0] , values[1] , 0x3000,codeMemoryPtr);
+
+    return TWO_BYTE;
+}
+
+int adiw(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //add immediate to word
+
+  Token *token;
+  uint16_t values[2];    // values to store extraced value of operands
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
+  int minMax[4] = {24,30,0,63};
+
+    getRdK8(tokenizer, values , minMax );
+    int odd = ( values[0] % 2);
+    if(odd == 1){
+      throwException(ERR_INVALID_REGISTER,token ,\
+        "Only accept registers with the value of R24,26,28,30, but received '%d' ",values[0] );
+    }else{
+      *ptr = 0x9600 | (values[0]-24)<<4 | (values[1] & 0x30)<<2 | (values[1]&0x0f);
+    }
 
     return TWO_BYTE;
 }

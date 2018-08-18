@@ -108,6 +108,7 @@ int ldi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int cbr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int sbr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int cpi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int adiw(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 
 char *convertToLowerCase(char *str);
 int assembleOneInstruction(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);

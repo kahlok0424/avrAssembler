@@ -1900,9 +1900,9 @@ void test_assembleOneStruction_ldi_expect_assemble_correctly(void)
   }
 }
 
-void test_assembleOneStruction_cpr_expect_assemble_correctly(void)
+void test_assembleOneStruction_cbr_expect_assemble_correctly(void)
 {
-  char *line = "cpr r20,55";
+  char *line = "cbr r20,55";
   Tokenizer *tokenizer;
   uint8_t codeMemoryPtr[2];
   int byte_number = 0;
@@ -1943,6 +1943,38 @@ void test_assembleOneStruction_cpi_expect_assemble_correctly(void)
     tokenizer = createTokenizer(line);
     byte_number = assembleOneInstruction(tokenizer ,codeMemoryPtr);
     TEST_ASSERT_EQUAL_HEX16(0x36a3 ,*(uint16_t *)codeMemoryPtr); //d60d
+  }Catch(ex){
+    dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_assembleOneStruction_adiw_expect_assemble_correctly(void)
+{
+  char *line = "adiw r24,40";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[2];
+  int byte_number = 0;
+
+  Try{
+    tokenizer = createTokenizer(line);
+    byte_number = assembleOneInstruction(tokenizer ,codeMemoryPtr);
+    TEST_ASSERT_EQUAL_HEX16(0x9688 ,*(uint16_t *)codeMemoryPtr); //d60d
+  }Catch(ex){
+    dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_assembleOneStruction_adiw_given_odd_register_expect_invalid_register(void)
+{
+  char *line = "adiw r25,40";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[2];
+  int byte_number = 0;
+
+  Try{
+    tokenizer = createTokenizer(line);
+    byte_number = assembleOneInstruction(tokenizer ,codeMemoryPtr);
+    TEST_ASSERT_EQUAL_HEX16(0x9688 ,*(uint16_t *)codeMemoryPtr); //d60d
   }Catch(ex){
     dumpTokenErrorMessage(ex, 1);
   }
