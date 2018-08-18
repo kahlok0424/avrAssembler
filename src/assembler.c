@@ -96,6 +96,8 @@ InstructionMap instructionsMapTable[] = {
   {"sbr" , sbr},
   {"cpi" , cpi},
   {"adiw" , adiw}, //86
+  {"call" , call}, //4 byte instrcutions
+  {"jmp" , jmp}, //88
 };
 
 
@@ -177,7 +179,7 @@ int assembleOneInstruction(Tokenizer *tokenizer , uint8_t *codeMemoryPtr){
   if(token->type != TOKEN_IDENTIFIER_TYPE){
     throwException(ERR_EXPECTING_IDENTIFIER, token, "Expected to be identifier , but is '%s' " ,token->str );
   }else{
-  for(int i = 0 ; i < 86; i++){
+  for(int i = 0 ; i < 88; i++){
     if( strcmp(temp, instructionsMapTable[i].name) == 0 ){
       tableNo = i;
       check =1;
@@ -995,6 +997,32 @@ int adiw(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //add immediate to wor
     }
 
     return TWO_BYTE;
+}
+
+int call(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //long call to a subroutine
+
+  Token *token;
+  uint16_t values[2];    // values to store extraced value of operands
+  uint32_t *ptr = (uint32_t *)codeMemoryPtr;  //0x940e0000
+  uint32_t longValues;
+
+    longValues = getLongConstant(tokenizer , 0,4000000);
+    *ptr = 0x940e0000 | (longValues&0x003f0000)<<3 | (longValues & 0x0001ffff);
+
+    return FOUR_BYTE;
+}
+
+int jmp(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //long call to a subroutine
+
+  Token *token;
+  uint16_t values[2];    // values to store extraced value of operands
+  uint32_t *ptr = (uint32_t *)codeMemoryPtr;  //0x940e0000
+  uint32_t longValues;
+
+    longValues = getLongConstant(tokenizer , 0,4000000);
+    *ptr = 0x940c0000 | (longValues&0x003f0000)<<3 | (longValues & 0x0001ffff);
+
+    return FOUR_BYTE;
 }
 
 /*int ld(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //load indirect data

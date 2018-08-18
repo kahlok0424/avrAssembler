@@ -1980,6 +1980,53 @@ void test_assembleOneStruction_adiw_given_odd_register_expect_invalid_register(v
   }
 }
 
+void test_assembleOneStruction_call_expect_assemble_correctly(void)
+{
+  char *line = "call 3999999";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[2];
+  int byte_number = 0;
+
+  Try{
+    tokenizer = createTokenizer(line);
+    byte_number = assembleOneInstruction(tokenizer ,codeMemoryPtr);
+    TEST_ASSERT_EQUAL_HEX32(0x95ef08ff ,*(uint32_t *)codeMemoryPtr); //d60d
+  }Catch(ex){
+    dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_assembleOneStruction_call_expect_beyond_limit(void)
+{
+  char *line = "call 5999999";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[2];
+  int byte_number = 0;
+
+  Try{
+    tokenizer = createTokenizer(line);
+    byte_number = assembleOneInstruction(tokenizer ,codeMemoryPtr);
+  }Catch(ex){
+    dumpTokenErrorMessage(ex, 1);
+  }
+}
+
+void test_assembleOneStruction_jmp_expect_assemble_correctly(void)
+{
+  char *line = "jmp 0";
+  Tokenizer *tokenizer;
+  uint8_t codeMemoryPtr[2];
+  int byte_number = 0;
+
+  Try{
+    tokenizer = createTokenizer(line);
+    byte_number = assembleOneInstruction(tokenizer ,codeMemoryPtr);
+    TEST_ASSERT_EQUAL_HEX32(0x940c0000 ,*(uint32_t *)codeMemoryPtr); 
+  }Catch(ex){
+    dumpTokenErrorMessage(ex, 1);
+  }
+}
+
 void test_getToken_given_random_line(void){
   char *line = "inc R12 pc- +++";
   Tokenizer *tokenizer;

@@ -26,6 +26,7 @@ void getRd(Tokenizer *tokenizer , uint16_t *values , int minReg ,int maxReg);   
 void getRdRr(Tokenizer *tokenizer , uint16_t *value ,  int minReg , int maxReg);   //example add Rd ,rr
 void getRdK8(Tokenizer *tokenizer ,uint16_t *value , int minMax[]);
 uint16_t getConstant(Tokenizer *tokenizer, int min , int max );
+uint32_t getLongConstant(Tokenizer *tokenizer, int min , int max );
 void getK(Tokenizer *tokenizer,uint16_t *values ,int min ,int max );
 
 #endif // _GETOPERAND_H

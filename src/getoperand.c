@@ -136,6 +136,18 @@ uint16_t getConstant(Tokenizer *tokenizer, int min , int max ){
   }
 }
 
+uint32_t getLongConstant(Tokenizer *tokenizer, int min , int max ){
+  IntegerToken *token;
+  token = getToken(tokenizer);
+  if(token->type == TOKEN_INTEGER_TYPE){
+    if( token->value > max || token->value < min){
+      throwException(ERR_BEYOND_LIMIT, token, " '%d' beyond the limit of %d < k < %d " ,token->value,min,max );
+    }else {  return token->value; }
+  }else{
+    throwException(ERR_INVALID_INTEGER, token, "Expect integer but the token is '%s' " , token->str);
+  }
+}
+
 void getK(Tokenizer *tokenizer,uint16_t *values, int min , int max){
 
   Token *token;

@@ -110,6 +110,10 @@ int sbr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int cpi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int adiw(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 
+//4byte instructions
+int call(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int jmp(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+
 char *convertToLowerCase(char *str);
 int assembleOneInstruction(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 void encodingRd(int Rd , uint8_t opcode1, uint8_t opcode2 , uint8_t codeMemoryPtr[]);
