@@ -114,6 +114,14 @@ int adiw(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int call(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int jmp(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 
+//other instrcutions
+int bset(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int bclr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int sbi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int cbi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int bst(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int bld(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+
 char *convertToLowerCase(char *str);
 int assembleOneInstruction(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 void encodingRd(int Rd , uint8_t opcode1, uint8_t opcode2 , uint8_t codeMemoryPtr[]);
