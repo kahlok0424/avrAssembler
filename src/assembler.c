@@ -104,6 +104,15 @@ InstructionMap instructionsMapTable[] = {
   {"cbi" , cbi},
   {"bst" , bst},
   {"bld" , bld}, //94
+  {"sbrc" , sbrc},
+  {"sbrs" , sbrs},
+  {"sbic" , sbic},
+  {"sbis" , sbis},
+  {"brbc" , brbc},
+  {"brbs" , brbs}, //100
+  {"sbiw" , sbiw},
+  {"in" , in},
+  {"out" , out}, //103
 };
 
 
@@ -185,7 +194,7 @@ int assembleOneInstruction(Tokenizer *tokenizer , uint8_t *codeMemoryPtr){
   if(token->type != TOKEN_IDENTIFIER_TYPE){
     throwException(ERR_EXPECTING_IDENTIFIER, token, "Expected to be identifier , but is '%s' " ,token->str );
   }else{
-  for(int i = 0 ; i < 94; i++){
+  for(int i = 0 ; i < 103; i++){
     if( strcmp(temp, instructionsMapTable[i].name) == 0 ){
       tableNo = i;
       check =1;
@@ -999,7 +1008,26 @@ int adiw(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //add immediate to wor
       throwException(ERR_INVALID_REGISTER,token ,\
         "Only accept registers with the value of R24,26,28,30, but received '%d' ",values[0] );
     }else{
-      *ptr = 0x9600 | (values[0]-24)<<4 | (values[1] & 0x30)<<2 | (values[1]&0x0f);
+      *ptr = 0x9600 | (((values[0])-24)/2)<<4 | (values[1] & 0x30)<<2 | (values[1]&0x0f);
+    }
+
+    return TWO_BYTE;
+}
+
+int sbiw(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //add immediate to word
+
+  Token *token = createNullToken();
+  uint16_t values[2];    // values to store extraced value of operands
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
+  int minMax[4] = {24,30,0,63};
+
+    getRdK8(tokenizer, values , minMax );
+    int odd = ( values[0] % 2);
+    if(odd >= 1){
+      throwException(ERR_INVALID_REGISTER,token ,\
+        "Only accept registers with the value of R24,26,28,30, but received '%d' ",values[0] );
+    }else{
+      *ptr = 0x9700 | (((values[0])-24)/2)<<4 | (values[1] & 0x30)<<2 | (values[1]&0x0f);
     }
 
     return TWO_BYTE;
@@ -1034,7 +1062,7 @@ int jmp(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //long call to a subrou
 int bset(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //set bit in SREG
 
   uint16_t value;
-  uint16_t *ptr = (uint16_t *)codeMemoryPtr;  //0x940e0000
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
 
     value = getConstant(tokenizer, 0 , 7);
     *ptr = 0x9408 | (value&0x000f)<<4 ;
@@ -1045,7 +1073,7 @@ int bset(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //set bit in SREG
 int bclr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //clear bit in SREG
 
   uint16_t value;
-  uint16_t *ptr = (uint16_t *)codeMemoryPtr;  //0x940e0000
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
 
     value = getConstant(tokenizer, 0 , 7);
     *ptr = 0x9488 | (value&0x000f)<<4 ;
@@ -1056,9 +1084,10 @@ int bclr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //clear bit in SREG
 int sbi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //set bit in i/o register
 
   uint16_t values[2];
-  uint16_t *ptr = (uint16_t *)codeMemoryPtr;  //0x940e0000
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
 
     values[0] = getConstant(tokenizer, 0 , 31);
+    getNextTokenAndVerify(tokenizer,",");
     values[1] = getConstant(tokenizer, 0 , 7);
     *ptr = 0x9a00 | (values[0]&0x001f)<<3 | (values[1]&0x0007) ;
 
@@ -1068,9 +1097,10 @@ int sbi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //set bit in i/o regist
 int cbi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //clear bit in i/o register
 
   uint16_t values[2];
-  uint16_t *ptr = (uint16_t *)codeMemoryPtr;  //0x940e0000
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
 
     values[0] = getConstant(tokenizer, 0 , 31);
+    getNextTokenAndVerify(tokenizer,",");
     values[1] = getConstant(tokenizer, 0 , 7);
     *ptr = 0x9800 | (values[0]&0x001f)<<3 | (values[1]&0x0007) ;
 
@@ -1080,7 +1110,7 @@ int cbi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //clear bit in i/o regi
 int bst(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //Bit Store from Bit in Register to T Flag in SREG
 
   uint16_t values[2];
-  uint16_t *ptr = (uint16_t *)codeMemoryPtr;  //0x940e0000
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
 
     getRd(tokenizer , values , 0 ,31);
     getNextTokenAndVerify(tokenizer,",");
@@ -1093,12 +1123,116 @@ int bst(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //Bit Store from Bit in
 int bld(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //Bit Load from the T Flag in SREG to a Bit in Register.
 
   uint16_t values[2];
-  uint16_t *ptr = (uint16_t *)codeMemoryPtr;  //0x940e0000
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
 
     getRd(tokenizer , values , 0 ,31);
     getNextTokenAndVerify(tokenizer,",");
     values[1] = getConstant(tokenizer, 0 , 7);
     *ptr = 0xf800 | (values[0]&0x001f)<<4 | (values[1]&0x0007) ;
+
+    return TWO_BYTE;
+}
+
+int sbrc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //Skip if Bit in Register is Cleared
+
+  uint16_t values[2];
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
+
+    getRd(tokenizer , values , 0 ,31);
+    getNextTokenAndVerify(tokenizer,",");
+    values[1] = getConstant(tokenizer, 0 , 7);
+    *ptr = 0xfc00 | (values[0]&0x001f)<<4 | (values[1]&0x0007) ;
+
+    return TWO_BYTE;
+}
+
+int sbrs(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //Skip if Bit in Register is Set
+
+  uint16_t values[2];
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
+
+    getRd(tokenizer , values , 0 ,31);
+    getNextTokenAndVerify(tokenizer,",");
+    values[1] = getConstant(tokenizer, 0 , 7);
+    *ptr = 0xfe00 | (values[0]&0x001f)<<4 | (values[1]&0x0007) ;
+
+    return TWO_BYTE;
+}
+
+int sbic(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //Skip if Bit in I/O Register is Cleared
+
+  uint16_t values[2];
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
+
+    values[0] = getConstant(tokenizer, 0 , 31);
+    getNextTokenAndVerify(tokenizer,",");
+    values[1] = getConstant(tokenizer, 0 , 7);
+    *ptr = 0x9900 | (values[0]&0x001f)<<3 | (values[1]&0x0007) ;
+
+    return TWO_BYTE;
+}
+
+int sbis(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //Skip if Bit in I/O Register is Set
+
+  uint16_t values[2];
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
+
+    values[0] = getConstant(tokenizer, 0 , 31);
+    getNextTokenAndVerify(tokenizer,",");
+    values[1] = getConstant(tokenizer, 0 , 7);
+    *ptr = 0x9b00 | (values[0]&0x001f)<<3 | (values[1]&0x0007) ;
+
+    return TWO_BYTE;
+}
+
+int brbc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //Branch if Bit in SREG is Cleared
+
+  uint16_t values[2];
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
+
+    values[1] = getConstant(tokenizer, 0 , 7);
+    getNextTokenAndVerify(tokenizer,",");
+    getK(tokenizer,values,-64,63);
+    *ptr = 0xf400 | ((values[0]-1)&0x007f)<<3 | (values[1]&0x0007) ;
+
+    return TWO_BYTE;
+}
+
+int brbs(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //Branch if Bit in SREG is set
+
+  uint16_t values[2];
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
+
+    values[1] = getConstant(tokenizer, 0 , 7);
+    getNextTokenAndVerify(tokenizer,",");
+    getK(tokenizer,values,-64,63);
+    *ptr = 0xf000 | ((values[0]-1)&0x007f)<<3 | (values[1]&0x0007) ;
+
+    return TWO_BYTE;
+}
+
+int in(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //Load an I/O Location to Register
+
+  uint16_t values[2];
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
+
+    getRd(tokenizer,values , 0 ,31);
+    getNextTokenAndVerify(tokenizer,",");
+    values[1] = getConstant(tokenizer,0,63);
+    *ptr = 0xb000 | (values[0]&0x001f)<<4 | (values[1]&0x0030)<<5 | values[1]&0x000f ;
+
+    return TWO_BYTE;
+}
+
+int out(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]){ //store an I/O Location to Register
+
+  uint16_t values[2];
+  uint16_t *ptr = (uint16_t *)codeMemoryPtr;
+
+    values[1] = getConstant(tokenizer,0,63);
+    getNextTokenAndVerify(tokenizer,",");
+    getRd(tokenizer,values , 0 ,31);
+    *ptr = 0xb800 | (values[0]&0x001f)<<4 | (values[1]&0x0030)<<5 | values[1]&0x000f ;
 
     return TWO_BYTE;
 }

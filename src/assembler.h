@@ -109,6 +109,7 @@ int cbr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int sbr(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int cpi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int adiw(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int sbiw(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 
 //4byte instructions
 int call(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
@@ -121,6 +122,14 @@ int sbi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int cbi(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int bst(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 int bld(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int sbrc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int sbrs(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int sbic(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int sbis(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brbc(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int brbs(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int in(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
+int out(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
 
 char *convertToLowerCase(char *str);
 int assembleOneInstruction(Tokenizer *tokenizer , uint8_t codeMemoryPtr[]);
